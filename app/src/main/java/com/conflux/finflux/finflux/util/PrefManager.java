@@ -19,6 +19,7 @@ public class PrefManager {
     private static final String INSTANCE_URL = "preferences_instance";
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
+    private static final String ORGANIZATION = "organization_name";
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());
@@ -104,6 +105,10 @@ public class PrefManager {
 
     public static void setUserId(int id) {
         putInt(USER_ID, id);
+    }
+
+    public static void setOrganizationName(String organizationName){
+        putString(ORGANIZATION,organizationName);
     }
 
     public static void setTenant(String tenant) {

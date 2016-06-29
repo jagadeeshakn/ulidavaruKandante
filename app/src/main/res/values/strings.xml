@@ -20,4 +20,6 @@
     //login strings
     <string name="url_error_empty">Please provide valid url/ip address.</string>
     <string name="tenant_error_empty">Please provide valid tenant identifier.</string>
+    <string name="organization_name">Organization Name</string>
+    <string name="error_organization_name">Please provide your organization name.</string>
 </resources>

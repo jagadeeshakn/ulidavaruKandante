@@ -1,4 +1,4 @@
-package com.conflux.finflux.finflux.login;
+package com.conflux.finflux.finflux.login.data;
 
 /**
  * Created by praveen on 6/26/2016.

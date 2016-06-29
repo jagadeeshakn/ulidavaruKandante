@@ -19,6 +19,7 @@ public class PrefManager {
     private static final String INSTANCE_URL = "preferences_instance";
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
+    private static final String ORGANIZATION = "organization_name";
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());
@@ -106,13 +107,17 @@ public class PrefManager {
         putInt(USER_ID, id);
     }
 
+    public static void setOrganizationName(String organizationName){
+        putString(ORGANIZATION,organizationName);
+    }
+
     public static void setTenant(String tenant) {
         if (!TextUtils.isEmpty(tenant))
             putString(TENANT, tenant);
     }
 
     public static String getTenant() {
-        return getString(TENANT, "default");
+        return getString(TENANT, "");
     }
 
     /**
@@ -131,7 +136,11 @@ public class PrefManager {
     }
 
     public static String getInstanceDomain() {
-        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
+        return getString(INSTANCE_DOMAIN, "");
+    }
+
+    public static String getOrganization(){
+        return getString(ORGANIZATION,"");
     }
 
     public static void setPort(String port) {
@@ -140,7 +149,7 @@ public class PrefManager {
     }
 
     public static String getPort() {
-        return getString(PORT, "80");
+        return getString(PORT, "");
     }
 }
 

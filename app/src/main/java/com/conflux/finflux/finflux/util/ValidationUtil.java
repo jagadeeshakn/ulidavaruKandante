@@ -6,7 +6,6 @@
 package com.conflux.finflux.finflux.util;
 
 
-import com.conflux.finflux.finflux.infrastructure.ApiConstants.APIEndPoint;
 import com.conflux.finflux.finflux.infrastructure.ApiEndpoint;
 
 import java.net.URL;

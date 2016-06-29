@@ -8,20 +8,17 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.db.Activation;
-import com.conflux.finflux.finflux.login.LoginConstants;
-import com.conflux.finflux.finflux.util.Logger;
+import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
+import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
+import com.conflux.finflux.finflux.login.data.LoginConstants;
 import com.conflux.finflux.finflux.util.PrefManager;
 import com.conflux.finflux.finflux.util.ValidationUtil;
-import com.facebook.stetho.common.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -41,6 +38,7 @@ public class ApplicationSetupFragment extends Fragment {
     @Bind(R.id.editText_port_number) EditText editTextPort;
     @Bind(R.id.editText_tenant)EditText editTextTenant;
     @Bind(R.id.tv_constructed_instance_url)TextView textViewConstructedInstanceUrl;
+    @Bind(R.id.editText_organization)EditText editTextOrganizationName;
 
     private String instanceURL;
     private String tenantIdentifier;
@@ -57,20 +55,34 @@ public class ApplicationSetupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_application_setup, container, false);
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
         if(!Activation.hasActivated(TAG)){
             cardViewActivate.setVisibility(View.VISIBLE);
-        }else {
-            long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
-            if(count == 0){
-                cardViewServerDetail.setVisibility(View.VISIBLE);
-                editTextURL.addTextChangedListener(urlWatcher);
-                editTextPort.addTextChangedListener(urlWatcher);
-            }
+        }else if(checkInitialSetUp()){
+            displayAppUrlConfigView();
         }
+
         return rootView;
     }
 
+
+    private boolean checkInitialSetUp(){
+        long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
+        String organization = PrefManager.getOrganization();
+        String domain = PrefManager.getInstanceDomain();
+        String tenant = PrefManager.getTenant();
+        if(count == 0 || organization.isEmpty() || domain.isEmpty() || tenant.isEmpty()){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private void displayAppUrlConfigView(){
+        cardViewServerDetail.setVisibility(View.VISIBLE);
+        editTextURL.addTextChangedListener(urlWatcher);
+        editTextPort.addTextChangedListener(urlWatcher);
+    }
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -84,9 +96,9 @@ public class ApplicationSetupFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            Integer port = editTextPort.getEditableText().toString().isEmpty() ? null : Integer.valueOf(editTextPort.getEditableText().toString());
-            instanceURL = ValidationUtil.getInstanceUrl(editTextURL.getText().toString(), port);
-            tenantIdentifier=editTextTenant.getEditableText().toString();
+            Integer port = editTextPort.getEditableText().toString().trim().isEmpty() ? null : Integer.valueOf(editTextPort.getEditableText().toString());
+            instanceURL = ValidationUtil.getInstanceUrl(editTextURL.getText().toString().trim(), port);
+            tenantIdentifier=editTextTenant.getEditableText().toString().trim();
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
             textViewConstructedInstanceUrl.setText(instanceURL);
             textViewConstructedInstanceUrl.setTextColor(isValidUrl ? getResources().getColor(android.R.color.holo_green_dark) : getResources().getColor(android.R.color.holo_red_dark));
@@ -96,18 +108,30 @@ public class ApplicationSetupFragment extends Fragment {
     @OnClick(R.id.button_submit)
     public void onClickSubmit(View view){
         if(validate()){
-            Logger.i(TAG,"Successful validation");
+            PrefManager.setInstanceDomain(editTextURL.getText().toString().trim());
+            PrefManager.setInstanceUrl(instanceURL);
+            PrefManager.setPort(editTextPort.getText().toString().trim());
+            PrefManager.setOrganizationName(editTextOrganizationName.getText().toString().trim());
+            PrefManager.setTenant(tenantIdentifier);
+            
         }
     }
 
     private boolean validate(){
-        if(editTextURL.getText() == null || editTextURL.getText().toString().isEmpty()){
+        boolean flag = true;
+        if(editTextOrganizationName.getText().toString().trim().isEmpty()){
+            editTextOrganizationName.setError(getString(R.string.error_organization_name));
+            flag = false;
+        }
+        if(editTextURL.getText() == null || editTextURL.getText().toString().trim().isEmpty()){
             editTextURL.setError(getString(R.string.url_error_empty));
+            flag = false;
         }
-        if(editTextTenant.getText().toString().isEmpty()){
+        if(editTextTenant.getText().toString().trim().isEmpty()){
             editTextTenant.setError(getString(R.string.tenant_error_empty));
+            flag = false;
         }
-        return true;
+        return flag;
     }
 
 
@@ -117,6 +141,10 @@ public class ApplicationSetupFragment extends Fragment {
         if(!activationKey.isEmpty()){
             /* Fixme praveen send the activation key to server validate and then store it to sqlite */
             saveActivationKey(activationKey);
+            if(checkInitialSetUp()){
+                cardViewActivate.setVisibility(View.GONE);
+                displayAppUrlConfigView();
+            }
         }
     }
 
@@ -126,6 +154,7 @@ public class ApplicationSetupFragment extends Fragment {
             activation.setIsActivated(true);
             activation.setActivationKey(activationKey);
             activation.save();
+            ApplicationAnalytics.sendActivationStatus(FabricIoConstants.SUCCESSFUL,activationKey);
         }
     }
 

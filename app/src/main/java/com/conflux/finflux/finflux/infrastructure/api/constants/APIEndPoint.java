@@ -3,7 +3,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 
-package com.conflux.finflux.finflux.infrastructure.ApiConstants;
+package com.conflux.finflux.finflux.infrastructure.api.constants;
 
 /**
  * Created by praveen on 26/06/16.

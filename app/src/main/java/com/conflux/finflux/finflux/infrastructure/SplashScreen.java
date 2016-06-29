@@ -4,6 +4,8 @@ import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.db.Activation;
 import com.conflux.finflux.finflux.infrastructure.operations.SplashScreenCheckList;
 import com.conflux.finflux.finflux.util.Logger;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -62,11 +64,19 @@ public class SplashScreen extends Activity implements SplashScreenCheckList{
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
         TranslateAnimation contentViewAnimate = new TranslateAnimation(0.0f, 0.0f,
-                0.0f, -400.0f);
+                0.0f, -300.0f);
         contentViewAnimate.setDuration(2000);
         contentViewAnimate.setFillAfter(true);
         contentViewAnimate.setAnimationListener(animationListener);
         imageViewLogo.startAnimation(contentViewAnimate);
+        // TODO: Use your own attributes to track content views in your app
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Tweet")
+                .putContentType("Video")
+                .putContentId("1234")
+                .putCustomAttribute("Favorites Count", 20)
+                .putCustomAttribute("Screen Orientation", "Landscape"));
+
     }
 
 

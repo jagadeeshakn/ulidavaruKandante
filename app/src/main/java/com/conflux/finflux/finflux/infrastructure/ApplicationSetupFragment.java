@@ -8,21 +8,17 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.db.Activation;
-import com.conflux.finflux.finflux.login.LoginConstants;
-import com.conflux.finflux.finflux.util.Logger;
+import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
+import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
+import com.conflux.finflux.finflux.login.data.LoginConstants;
 import com.conflux.finflux.finflux.util.PrefManager;
 import com.conflux.finflux.finflux.util.ValidationUtil;
-import com.facebook.stetho.common.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -62,15 +58,25 @@ public class ApplicationSetupFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         if(!Activation.hasActivated(TAG)){
             cardViewActivate.setVisibility(View.VISIBLE);
-        }else {
-            long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
-            if(count == 0){
-               displayAppUrlConfigView();
-            }
+        }else if(checkInitialSetUp()){
+            displayAppUrlConfigView();
         }
+
         return rootView;
     }
 
+
+    private boolean checkInitialSetUp(){
+        long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
+        String organization = PrefManager.getOrganization();
+        String domain = PrefManager.getInstanceDomain();
+        String tenant = PrefManager.getTenant();
+        if(count == 0 || organization.isEmpty() || domain.isEmpty() || tenant.isEmpty()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     private void displayAppUrlConfigView(){
         cardViewServerDetail.setVisibility(View.VISIBLE);
@@ -107,6 +113,7 @@ public class ApplicationSetupFragment extends Fragment {
             PrefManager.setPort(editTextPort.getText().toString().trim());
             PrefManager.setOrganizationName(editTextOrganizationName.getText().toString().trim());
             PrefManager.setTenant(tenantIdentifier);
+            
         }
     }
 
@@ -134,8 +141,7 @@ public class ApplicationSetupFragment extends Fragment {
         if(!activationKey.isEmpty()){
             /* Fixme praveen send the activation key to server validate and then store it to sqlite */
             saveActivationKey(activationKey);
-            long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
-            if(count == 0){
+            if(checkInitialSetUp()){
                 cardViewActivate.setVisibility(View.GONE);
                 displayAppUrlConfigView();
             }
@@ -148,6 +154,7 @@ public class ApplicationSetupFragment extends Fragment {
             activation.setIsActivated(true);
             activation.setActivationKey(activationKey);
             activation.save();
+            ApplicationAnalytics.sendActivationStatus(FabricIoConstants.SUCCESSFUL,activationKey);
         }
     }
 

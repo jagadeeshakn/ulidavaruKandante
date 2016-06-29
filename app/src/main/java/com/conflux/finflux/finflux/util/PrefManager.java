@@ -117,7 +117,7 @@ public class PrefManager {
     }
 
     public static String getTenant() {
-        return getString(TENANT, "default");
+        return getString(TENANT, "");
     }
 
     /**
@@ -136,7 +136,11 @@ public class PrefManager {
     }
 
     public static String getInstanceDomain() {
-        return getString(INSTANCE_DOMAIN, "demo.openmf.org");
+        return getString(INSTANCE_DOMAIN, "");
+    }
+
+    public static String getOrganization(){
+        return getString(ORGANIZATION,"");
     }
 
     public static void setPort(String port) {
@@ -145,7 +149,7 @@ public class PrefManager {
     }
 
     public static String getPort() {
-        return getString(PORT, "80");
+        return getString(PORT, "");
     }
 }
 

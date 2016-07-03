@@ -1,11 +1,11 @@
 package com.conflux.finflux.finflux.login.data;
 
-import com.conflux.finflux.finflux.db.LoginUserRole;
+import io.realm.RealmObject;
 
 /**
  * Created by Praveen J U on 6/29/2016.
  */
-public class Role extends LoginUserRole{
+public class Role {
     private String name;
     private String description;
 

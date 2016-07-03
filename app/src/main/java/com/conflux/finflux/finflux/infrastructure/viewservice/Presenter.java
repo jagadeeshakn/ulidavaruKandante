@@ -1,4 +1,5 @@
-package com.conflux.finflux.finflux.infrastructure.concepts;
+package com.conflux.finflux.finflux.infrastructure.viewservice;
+
 
 /**
  * Created by Praveen J U on 6/29/2016.

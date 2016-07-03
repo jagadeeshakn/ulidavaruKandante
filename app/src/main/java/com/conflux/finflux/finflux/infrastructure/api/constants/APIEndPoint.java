@@ -12,7 +12,7 @@ public class APIEndPoint {
 
     //This class contains all the Constants for API End Points
 
-    public static final String AUTHENTICATION = "/authentication";
+    public static final String AUTHENTICATION = "authentication";
     public static final String CLIENTS = "/clients";
     public static final String CHARGES ="/charges";
     public static final String LOANS = "/loans";

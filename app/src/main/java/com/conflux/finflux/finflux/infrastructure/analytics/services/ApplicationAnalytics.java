@@ -18,4 +18,9 @@ public class ApplicationAnalytics {
         Answers.getInstance().logCustom(new CustomEvent(FabricIoConstants.APPLICATION_LAUNCED)
                 .putCustomAttribute(FabricIoConstants.ACTIVATION_STATUS, applicationActiveStatus));
     }
+
+    public static void sendLoginStatus(String loginStatus){
+        Answers.getInstance().logCustom(new CustomEvent(FabricIoConstants.APPLICATION_LAUNCED)
+                .putCustomAttribute(FabricIoConstants.ACTIVATION_STATUS, loginStatus));
+    }
 }

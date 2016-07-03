@@ -1,14 +1,17 @@
 package com.conflux.finflux.finflux.login.data;
 
-import com.conflux.finflux.finflux.db.LoginUser;
+import com.conflux.finflux.finflux.util.RealmString;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by Praveen J U on 6/29/2016.
  */
-public class User extends LoginUser {
+public class User  {
     public static final String AUTHENTICATION_KEY = "authenticationKey";
 
     private String username;
@@ -17,8 +20,12 @@ public class User extends LoginUser {
     private boolean authenticated;
     private int officeId;
     private String officeName;
-    private List<Role> roles = new ArrayList<Role>();
-    private List<String> permissions = new ArrayList<String>();
+    private List<Role> roles;
+    private List<String> permissions;
+
+    public static String getAuthenticationKey() {
+        return AUTHENTICATION_KEY;
+    }
 
     public String getUsername() {
         return username;
@@ -83,5 +90,4 @@ public class User extends LoginUser {
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
-
 }

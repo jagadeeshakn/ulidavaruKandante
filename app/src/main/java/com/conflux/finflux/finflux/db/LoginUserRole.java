@@ -1,11 +1,27 @@
 package com.conflux.finflux.finflux.db;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Table;
+import io.realm.RealmObject;
 
 /**
- * Created by Praveen J U on 6/29/2016.
+ * Created by Praveen J U on 7/2/2016.
  */
-@Table
-public class LoginUserRole extends SugarRecord {
+public class LoginUserRole extends RealmObject {
+    private String name;
+    private String description;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

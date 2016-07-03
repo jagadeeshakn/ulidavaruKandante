@@ -19,6 +19,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!--
         <meta-data
             android:name="DATABASE"
             android:value="finflux.db" />
@@ -34,6 +36,7 @@
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.conflux.finflux.finflux.db" />
+        -->
 
         <activity
             android:name=".infrastructure.SplashScreen"
@@ -62,11 +65,6 @@
             android:label="@string/title_activity_application_activation"
             android:theme="@style/FullscreenTheme" >
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -74,6 +72,13 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0536134ea9ec69fa467ff2d76607a4796d2907eb" />
+
+        <activity
+            android:name=".login.activity.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:theme="@style/FullscreenTheme">
+        </activity>
     </application>
 
 </manifest>

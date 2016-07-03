@@ -6,6 +6,7 @@ import com.conflux.finflux.finflux.infrastructure.JsonDateSerializer;
 import com.conflux.finflux.finflux.infrastructure.api.BaseUrl;
 import com.conflux.finflux.finflux.infrastructure.api.interceptor.ApiRequestInterceptor;
 import com.conflux.finflux.finflux.login.services.AuthService;
+import com.conflux.finflux.finflux.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BaseApiManager {
     private BaseUrl baseUrl = new BaseUrl();
     private AuthService authApi;
-    private static String BASE_URL;
+    private String BASE_URL = baseUrl.getUrl();
     private boolean shouldByPassSSLCerti = false;
 
     public BaseApiManager(){
@@ -51,14 +52,20 @@ public class BaseApiManager {
     }
 
     public void setApi(){
-        authApi = createApi(AuthService.class, BASE_URL );
+        createAuthApi();
     }
 
+
+    public AuthService getAuthApi() {
+        return authApi;
+    }
+
+    //retrofit buider
     private <T> T createApi(Class<T> clazz, String baseUrl) {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
-
+        Logger.d(getClass().getSimpleName(),"the Url is "+baseUrl);
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -66,6 +73,17 @@ public class BaseApiManager {
                 .client(getOkHttpClient())
                 .build()
                 .create(clazz);
+    }
+
+    private void createAuthApi() {
+
+        authApi = new Retrofit.Builder()
+                .baseUrl(baseUrl.getUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(getOkHttpClient())
+                .build()
+                .create(AuthService.class);
     }
 
     private OkHttpClient getOkHttpClient() {

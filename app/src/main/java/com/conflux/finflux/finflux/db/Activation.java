@@ -1,15 +1,25 @@
 package com.conflux.finflux.finflux.db;
 
+import com.conflux.finflux.finflux.util.Logger;
+import com.conflux.finflux.finflux.util.RealmHelperUtil;
 import com.orm.SugarRecord;
 import com.orm.query.Select;
 
 import java.security.PublicKey;
 
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Index;
+
 
 /**
  * Created by praveen on 6/23/2016.
  */
-public class Activation extends SugarRecord {
+public class Activation extends RealmObject {
+    @PrimaryKey
+    @Index
+    private long id;
 
     private boolean isActivated;
 
@@ -50,24 +60,22 @@ public class Activation extends SugarRecord {
         return toDate;
     }
 
+    public static boolean isNew(Realm realm){
+        return RealmHelperUtil.isTheEntryNew(realm,Activation.class);
+    }
 
+    public long getId() {
+        return id;
+    }
 
-    public static boolean isNew(){
-        //one app can have only one activation key so no string is passed to this just check for count
-        long count = Select.from(Activation.class).count();
-        if(count == 0){
-            return  true;
-        }else {
-            return false;
-        }
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getActivationKey() {
+        return activationKey;
     }
 
 
-    public static boolean hasActivated(String TAG){
-        Activation activation = Select.from(Activation.class).first();
-        if(activation != null){
-            return true;
-        }
-        else return false;
-    }
+
 }

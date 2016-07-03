@@ -1,5 +1,6 @@
 package com.conflux.finflux.finflux.infrastructure;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -15,7 +16,9 @@ import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.db.Activation;
 import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
+import com.conflux.finflux.finflux.login.activity.LoginActivity;
 import com.conflux.finflux.finflux.login.data.LoginConstants;
+import com.conflux.finflux.finflux.util.Logger;
 import com.conflux.finflux.finflux.util.PrefManager;
 import com.conflux.finflux.finflux.util.ValidationUtil;
 
@@ -24,6 +27,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -47,6 +52,7 @@ public class ApplicationSetupFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
     private View rootView = null;
+    Realm realm;
 
     public ApplicationSetupFragment() {
     }
@@ -56,10 +62,14 @@ public class ApplicationSetupFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_application_setup, container, false);
         ButterKnife.bind(this, rootView);
-        if(!Activation.hasActivated(TAG)){
+        realm = Realm.getDefaultInstance();
+        if(!hasActivated(TAG)){
             cardViewActivate.setVisibility(View.VISIBLE);
         }else if(checkInitialSetUp()){
             displayAppUrlConfigView();
+        }else {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
         }
 
         return rootView;
@@ -67,11 +77,13 @@ public class ApplicationSetupFragment extends Fragment {
 
 
     private boolean checkInitialSetUp(){
-        long count = PrefManager.getLong(LoginConstants.LOGIN_COUNT,0);
         String organization = PrefManager.getOrganization();
         String domain = PrefManager.getInstanceDomain();
         String tenant = PrefManager.getTenant();
-        if(count == 0 || organization.isEmpty() || domain.isEmpty() || tenant.isEmpty()){
+        Logger.e(TAG,"The organization Name is "+organization);
+        Logger.e(TAG,"The domain Name is "+domain);
+        Logger.e(TAG,"The tenant Name is "+tenant);
+        if(organization.isEmpty() | domain.isEmpty() | tenant.isEmpty()){
             return true;
         }else {
             return false;
@@ -112,8 +124,10 @@ public class ApplicationSetupFragment extends Fragment {
             PrefManager.setInstanceUrl(instanceURL);
             PrefManager.setPort(editTextPort.getText().toString().trim());
             PrefManager.setOrganizationName(editTextOrganizationName.getText().toString().trim());
-            PrefManager.setTenant(tenantIdentifier);
-            
+            Logger.e(TAG,"The tenant is "+editTextTenant.getText().toString().trim());
+            PrefManager.setTenant(editTextTenant.getText().toString().trim());
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
         }
     }
 
@@ -149,16 +163,28 @@ public class ApplicationSetupFragment extends Fragment {
     }
 
     private void saveActivationKey(String activationKey){
-        if(Activation.isNew()){
-            Activation activation = new Activation();
+        if(Activation.isNew(realm)) {
+            realm.beginTransaction();
+            Activation activation = realm.createObject(Activation.class);
+            activation.setId(1);
             activation.setIsActivated(true);
             activation.setActivationKey(activationKey);
-            activation.save();
-            ApplicationAnalytics.sendActivationStatus(FabricIoConstants.SUCCESSFUL,activationKey);
+            realm.commitTransaction();
+            ApplicationAnalytics.sendActivationStatus(FabricIoConstants.SUCCESSFUL, activationKey);
         }
     }
 
-    private boolean hasActivated(){
-        return Activation.hasActivated(TAG);
+
+    private boolean hasActivated(String TAG){
+        if(!Activation.isNew(realm)){
+            return true;
+        }
+        else return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }

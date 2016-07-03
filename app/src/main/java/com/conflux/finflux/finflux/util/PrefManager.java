@@ -112,7 +112,6 @@ public class PrefManager {
     }
 
     public static void setTenant(String tenant) {
-        if (!TextUtils.isEmpty(tenant))
             putString(TENANT, tenant);
     }
 
@@ -124,7 +123,7 @@ public class PrefManager {
      * Connection
      */
     public static void setInstanceUrl(String instanceUrl) {
-        putString(INSTANCE_URL, instanceUrl);
+        putString(INSTANCE_URL, instanceUrl+'/');
     }
 
     public static String getInstanceUrl() {

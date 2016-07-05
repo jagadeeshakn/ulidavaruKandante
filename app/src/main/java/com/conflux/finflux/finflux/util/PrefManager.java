@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
 
 import java.util.Set;
+import java.util.logging.StreamHandler;
 
 /**
  * @author praveen
@@ -20,6 +21,15 @@ public class PrefManager {
     private static final String INSTANCE_DOMAIN = "preferences_domain";
     private static final String PORT = "preferences_port";
     private static final String ORGANIZATION = "organization_name";
+    private static final String CAN_USE_DEFAULT_CERTIFICATE = "can use default certificate";
+
+    public static void canUseDefaultCertificate(boolean shouldByPassSSl){
+        putBoolean(CAN_USE_DEFAULT_CERTIFICATE, shouldByPassSSl);
+    }
+
+    public static boolean isSetUseDefaultCertificate(){
+        return getBoolean(CAN_USE_DEFAULT_CERTIFICATE,false);
+    }
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());

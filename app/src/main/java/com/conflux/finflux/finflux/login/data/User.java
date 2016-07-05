@@ -15,10 +15,10 @@ public class User  {
     public static final String AUTHENTICATION_KEY = "authenticationKey";
 
     private String username;
-    private int userId;
+    private long userId;
     private String base64EncodedAuthenticationKey;
     private boolean authenticated;
-    private int officeId;
+    private long officeId;
     private String officeName;
     private List<Role> roles;
     private List<String> permissions;
@@ -35,11 +35,11 @@ public class User  {
         this.username = username;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -59,11 +59,11 @@ public class User  {
         this.authenticated = authenticated;
     }
 
-    public int getOfficeId() {
+    public long getOfficeId() {
         return officeId;
     }
 
-    public void setOfficeId(int officeId) {
+    public void setOfficeId(long officeId) {
         this.officeId = officeId;
     }
 

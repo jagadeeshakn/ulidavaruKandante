@@ -12,20 +12,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.conflux.finflux.finflux.R;
+import com.conflux.finflux.finflux.db.LoginUser;
+import com.conflux.finflux.finflux.db.LoginUserRole;
 import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
+import com.conflux.finflux.finflux.login.data.Role;
 import com.conflux.finflux.finflux.login.data.User;
 import com.conflux.finflux.finflux.login.presenter.LoginPresenter;
 import com.conflux.finflux.finflux.login.viewservices.LoginMvpView;
 import com.conflux.finflux.finflux.util.Logger;
 import com.conflux.finflux.finflux.util.PrefManager;
+import com.conflux.finflux.finflux.util.RealmAutoIncrement;
+import com.conflux.finflux.finflux.util.RealmString;
+import com.conflux.finflux.finflux.util.Toaster;
 
 import javax.inject.Inject;
+import javax.net.ssl.SSLHandshakeException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 public class LoginActivity extends AppCompatActivity implements LoginMvpView {
 
@@ -38,8 +46,6 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     EditText _passwordText;
     @Bind(R.id.btn_login)
     Button _loginButton;
-    @Bind(R.id.link_signup)
-    TextView _signupLink;
 
     String username;
     String password;
@@ -67,16 +73,6 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
             @Override
             public void onClick(View v) {
                 login(false);
-            }
-        });
-
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-               /* Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);*/
             }
         });
     }
@@ -149,7 +145,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
         if (!validate())
             return;
         FinfluxApplication.baseApiManager = new BaseApiManager();
-
+        PrefManager.canUseDefaultCertificate(shouldByPassSSLSecurity);
+        FinfluxApplication.baseApiManager.setShouldByPassSSL(shouldByPassSSLSecurity);
         String instanceUrl = PrefManager.getInstanceUrl();
         Log.i(getClass().getSimpleName(), "the instance url in login method is " + instanceUrl);
         mLoginPresenter.login(instanceUrl, username, password);
@@ -158,8 +155,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     public boolean validate() {
         boolean valid = true;
 
-      username = _emailText.getText().toString();
-      password = _passwordText.getText().toString();
+      username = _emailText.getText().toString().trim();
+      password = _passwordText.getText().toString().trim();
 
         if (username.isEmpty()) {
             _emailText.setError(getString(R.string.no_username));
@@ -179,20 +176,77 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     }
 
     @Override
-    public void onLoginSuccessful(User user) {
+    public void onLoginSuccessful(final User user) {
+        Logger.i(TAG, "Login Successful  " + user.getUsername());
+        writeUserDetailsToTable(user);
 
-        Logger.i(TAG,"Login Successful");
+    }
 
+    private void writeUserDetailsToTable(final User user){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                try {
+                    LoginUser loginUser = new LoginUser();
+                    Logger.d(TAG, "The id is " + RealmAutoIncrement.getInstance(realm).getNextId(LoginUser.class));
+                    loginUser.setId(RealmAutoIncrement.getInstance(realm).getNextId(LoginUser.class));
+                    loginUser.setUsername(user.getUsername());
+                    loginUser.setUserId(user.getUserId());
+                    loginUser.setBase64EncodedAuthenticationKey(user.getBase64EncodedAuthenticationKey());
+                    loginUser.setOfficeId(user.getOfficeId());
+                    loginUser.setOfficeName(user.getOfficeName());
+                    loginUser.setAuthenticated(user.isAuthenticated());
+                    if (loginUser.getPermissions() == null) {
+                        RealmList<RealmString> realmStringsPermissions = new RealmList<RealmString>();
+                        loginUser.setPermissions(realmStringsPermissions);
+                        //create the object of realm string and add each permissions to this list
+                        for (String permission : user.getPermissions()) {
+                            RealmString permissionString = new RealmString();
+                            permissionString.setValue(permission);
+                            permissionString.setFkLoginUserUserId(user.getUserId());
+                            loginUser.getPermissions().add(permissionString);
+                        }
+                    }
+                    if (loginUser.getRoles() == null) {
+                        RealmList<LoginUserRole> realmStringsRoles = new RealmList<LoginUserRole>();
+                        loginUser.setRoles(realmStringsRoles);
+                        for (Role role : user.getRoles()) {
+                            try {
+                                LoginUserRole loginUserRole = new LoginUserRole();
+                                loginUserRole.setName(role.getName());
+                                loginUserRole.setFkLoginUserUserId(user.getUserId());
+                                loginUserRole.setDescription(role.getDescription());
+                                loginUser.getRoles().add(loginUserRole);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    realm.copyToRealm(loginUser);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
     public void onLoginError(Throwable throwable) {
-        Logger.e(TAG,"Login failure"+throwable.getMessage());
+        Logger.e(TAG,"Login failure "+throwable.getMessage());
+        try {
+            if (throwable.getCause() instanceof SSLHandshakeException) {
+                login(true);
+            }else
+                Toaster.show(findViewById(android.R.id.content), throwable.getMessage());
+
+        }catch (NullPointerException e){
+
+        }
     }
 
     @Override
     public void showProgressbar(boolean b) {
-        Logger.d(TAG,"show progress bar"+b);
+        Logger.d(TAG, "show progress bar" + b);
         if (b) {
             showProgress("Logging In");
         } else {

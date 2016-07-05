@@ -1,27 +1,38 @@
 package com.conflux.finflux.finflux.db;
 
 import com.conflux.finflux.finflux.login.data.Role;
+import com.conflux.finflux.finflux.util.RealmAutoIncrement;
 import com.conflux.finflux.finflux.util.RealmString;
 
 import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Praveen J U on 7/2/2016.
  */
 public class LoginUser extends RealmObject {
     public static final String AUTHENTICATION_KEY = "authenticationKey";
-
+    @PrimaryKey
+    private long id;
     private String username;
-    private int userId;
+    private long userId;
     private String base64EncodedAuthenticationKey;
     private boolean authenticated;
-    private int officeId;
+    private long officeId;
     private String officeName;
     private RealmList<LoginUserRole> roles;
     private RealmList<RealmString> permissions;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public static String getAuthenticationKey() {
         return AUTHENTICATION_KEY;
@@ -35,11 +46,11 @@ public class LoginUser extends RealmObject {
         this.username = username;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -59,11 +70,11 @@ public class LoginUser extends RealmObject {
         this.authenticated = authenticated;
     }
 
-    public int getOfficeId() {
+    public long getOfficeId() {
         return officeId;
     }
 
-    public void setOfficeId(int officeId) {
+    public void setOfficeId(long officeId) {
         this.officeId = officeId;
     }
 

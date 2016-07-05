@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.conflux.finflux.finflux.R;
+import com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity;
 import com.conflux.finflux.finflux.db.LoginUser;
 import com.conflux.finflux.finflux.db.LoginUserRole;
 import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
@@ -55,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     LoginPresenter mLoginPresenter;
     private ProgressDialog progress;
     private Realm realm;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +64,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
         Logger.d(TAG, "The loginviewer is " + mLoginPresenter);
-        if(mLoginPresenter == null)
-        {
-            mLoginPresenter =new LoginPresenter(mDataManager);
+        if (mLoginPresenter == null) {
+            mLoginPresenter = new LoginPresenter(mDataManager);
         }
         mLoginPresenter.attachView(this);
 
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
 
             @Override
             public void onClick(View v) {
-                login(false);
+                login(true);
             }
         });
     }
@@ -145,8 +146,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
         if (!validate())
             return;
         FinfluxApplication.baseApiManager = new BaseApiManager();
+
         PrefManager.canUseDefaultCertificate(shouldByPassSSLSecurity);
-        FinfluxApplication.baseApiManager.setShouldByPassSSL(shouldByPassSSLSecurity);
         String instanceUrl = PrefManager.getInstanceUrl();
         Log.i(getClass().getSimpleName(), "the instance url in login method is " + instanceUrl);
         mLoginPresenter.login(instanceUrl, username, password);
@@ -155,8 +156,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     public boolean validate() {
         boolean valid = true;
 
-      username = _emailText.getText().toString().trim();
-      password = _passwordText.getText().toString().trim();
+        username = _emailText.getText().toString().trim();
+        password = _passwordText.getText().toString().trim();
 
         if (username.isEmpty()) {
             _emailText.setError(getString(R.string.no_username));
@@ -165,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() ) {
+        if (password.isEmpty()) {
             _passwordText.setError(getString(R.string.no_password));
             valid = false;
         } else {
@@ -179,10 +180,17 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     public void onLoginSuccessful(final User user) {
         Logger.i(TAG, "Login Successful  " + user.getUsername());
         writeUserDetailsToTable(user);
+        loadDashBoard();
 
     }
 
-    private void writeUserDetailsToTable(final User user){
+    public void loadDashBoard() {
+        Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
+        Logger.d(TAG, "on dashboard activity is calling");
+        startActivity(intent);
+    }
+
+    private void writeUserDetailsToTable(final User user) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -223,7 +231,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
                         }
                     }
                     realm.copyToRealm(loginUser);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -232,14 +240,14 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
 
     @Override
     public void onLoginError(Throwable throwable) {
-        Logger.e(TAG,"Login failure "+throwable.getMessage());
+        Logger.e(TAG, "Login failure " + throwable.getMessage());
         try {
             if (throwable.getCause() instanceof SSLHandshakeException) {
                 login(true);
-            }else
+            } else
                 Toaster.show(findViewById(android.R.id.content), throwable.getMessage());
 
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
 
         }
     }

@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
 
     <style name="FullscreenTheme" parent="Theme.AppCompat.Light">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@color/blue</item>
+        <item name="android:windowBackground">@color/white</item>
         <!--<item name="metaButtonBarStyle">@style/ButtonBar</item>
         <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>-->
     </style>
@@ -23,5 +23,10 @@
 
     <!-- Backward-compatible version of ?android:attr/buttonBarButtonStyle -->
     <style name="ButtonBarButton" />
+
+    <style name="AppTheme.Text" parent="android:Widget.TextView">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
 
 </resources>

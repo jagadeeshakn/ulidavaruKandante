@@ -1,6 +1,7 @@
-package com.conflux.finflux.finflux.dashboard.activity;
+package com.conflux.finflux.finflux.core;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,15 +15,21 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.conflux.finflux.finflux.R;
-import com.conflux.finflux.finflux.dashboard.services.BaseActivityCallback;
+import com.conflux.finflux.finflux.collectionSheet.activity.CollectionSheetActivity;
+import com.conflux.finflux.finflux.core.BaseActivityCallback;
+import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
+import com.conflux.finflux.finflux.injection.component.ActivityComponent;
+import com.conflux.finflux.finflux.injection.component.DaggerActivityComponent;
+import com.conflux.finflux.finflux.injection.module.ActivityModule;
 
 /**
  * Created by jagadeeshakn on 7/2/2016.
  */
-public class NavigationWindowActivity extends AppCompatActivity implements BaseActivityCallback, NavigationView.OnNavigationItemSelectedListener {
+public class FinBaseActivity extends AppCompatActivity implements BaseActivityCallback, NavigationView.OnNavigationItemSelectedListener {
 
     protected Toolbar toolbar;
     private ProgressDialog progress;
+    private ActivityComponent mActivityComponent;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
 
@@ -33,6 +40,16 @@ public class NavigationWindowActivity extends AppCompatActivity implements BaseA
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+    }
+
+    public ActivityComponent getActivityComponent() {
+        if (mActivityComponent == null) {
+            mActivityComponent = DaggerActivityComponent.builder()
+                    .activityModule(new ActivityModule(this))
+                    .applicationComponent(FinfluxApplication.get(this).getComponent())
+                    .build();
+        }
+        return mActivityComponent;
     }
 
     public void setActionBarTitle(String title) {
@@ -119,6 +136,12 @@ public class NavigationWindowActivity extends AppCompatActivity implements BaseA
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // close the drawer
+        Intent intent=new Intent();
+        switch (item.getItemId()){
+            case R.id.item_collection:
+                intent.setClass(getApplicationContext(), CollectionSheetActivity.class);
+                startNavigationClickActivity(intent);
+        }
         mDrawerLayout.closeDrawer(Gravity.LEFT);
         mNavigationView.setCheckedItem(R.id.item_dashboard);
         return true;
@@ -149,6 +172,17 @@ public class NavigationWindowActivity extends AppCompatActivity implements BaseA
         actionBarDrawerToggle.syncState();
 
         // make an API call to fetch logged in client's details
+    }
+
+    public void startNavigationClickActivity(final Intent intent) {
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(intent);
+
+            }
+        }, 500);
     }
 
 

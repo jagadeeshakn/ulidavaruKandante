@@ -1,4 +1,4 @@
-package com.conflux.finflux.finflux.dashboard.services;
+package com.conflux.finflux.finflux.core;
 
 /**
  * Created by jagadeeshakn on 7/2/2016.

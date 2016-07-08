@@ -1,14 +1,11 @@
 package com.conflux.finflux.finflux.login.presenter;
 
+import com.conflux.finflux.finflux.base.Presenter;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
-import com.conflux.finflux.finflux.infrastructure.viewservice.MvpView;
-import com.conflux.finflux.finflux.infrastructure.viewservice.Presenter;
 import com.conflux.finflux.finflux.login.data.User;
 import com.conflux.finflux.finflux.login.viewservices.LoginMvpView;
 import com.conflux.finflux.finflux.util.Logger;
-
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -28,7 +25,7 @@ public class LoginPresenter implements Presenter<LoginMvpView> {
     @Inject
     public LoginPresenter(Data dataManager) {
         if(dataManager == null){
-
+            Logger.d("DATA","data manager object is null");
             dataManager = new Data(new BaseApiManager());
         }
         mDataManager = dataManager;

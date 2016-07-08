@@ -8,6 +8,9 @@ import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
+import com.conflux.finflux.finflux.injection.component.ApplicationComponent;
+import com.conflux.finflux.finflux.injection.component.DaggerApplicationComponent;
+import com.conflux.finflux.finflux.injection.module.ApplicationModule;
 import com.conflux.finflux.finflux.util.Logger;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
@@ -30,6 +33,12 @@ public class FinfluxApplication extends Application {
     private static FinfluxApplication instance;
     public static BaseApiManager baseApiManager;
     private static Setup setup;
+    private ApplicationComponent mApplicationComponent;
+
+    public static FinfluxApplication get(Context context) {
+        return (FinfluxApplication) context.getApplicationContext();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -72,5 +81,14 @@ public class FinfluxApplication extends Application {
 
     public static FinfluxApplication getInstance(){
         return instance;
+    }
+
+    public ApplicationComponent getComponent() {
+        if (mApplicationComponent == null) {
+            mApplicationComponent = DaggerApplicationComponent.builder()
+                    .applicationModule(new ApplicationModule(this))
+                    .build();
+        }
+        return mApplicationComponent;
     }
 }

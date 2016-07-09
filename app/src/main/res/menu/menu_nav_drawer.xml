@@ -20,7 +20,7 @@
             />
 
         <item
-            android:id="@+id/item_groups"
+            android:id="@+id/item_collection"
             android:checked="false"
             android:icon="@drawable/ic_collections"
             android:title="@string/collections"

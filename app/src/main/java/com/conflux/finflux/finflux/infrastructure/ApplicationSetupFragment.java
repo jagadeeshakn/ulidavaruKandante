@@ -13,7 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.conflux.finflux.finflux.R;
+import com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity;
 import com.conflux.finflux.finflux.db.Activation;
+import com.conflux.finflux.finflux.db.LoginUser;
 import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
 import com.conflux.finflux.finflux.login.activity.LoginActivity;
@@ -68,13 +70,29 @@ public class ApplicationSetupFragment extends Fragment {
         }else if(checkInitialSetUp()){
             displayAppUrlConfigView();
         }else {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
-            getActivity().finish();
+            if(!checkIfUserAlreadyAuthenticated()) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }else {
+                Intent intent = new Intent(getActivity(), DashBoardActivity.class);
+                Logger.d(TAG, "Authenticated user -> initializing start Dashboard activity");
+                startActivity(intent);
+                getActivity().finish();
+            }
         }
 
         return rootView;
     }
 
+
+    private boolean checkIfUserAlreadyAuthenticated(){
+        LoginUser loginUser= realm.where(LoginUser.class).findFirst();
+        if(loginUser!=null &&loginUser.isAuthenticated()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     private boolean checkInitialSetUp(){
         String organization = PrefManager.getOrganization();
@@ -124,7 +142,6 @@ public class ApplicationSetupFragment extends Fragment {
             PrefManager.setInstanceUrl(instanceURL);
             PrefManager.setPort(editTextPort.getText().toString().trim());
             PrefManager.setOrganizationName(editTextOrganizationName.getText().toString().trim());
-            Logger.e(TAG,"The tenant is "+editTextTenant.getText().toString().trim());
             PrefManager.setTenant(editTextTenant.getText().toString().trim());
             startActivity(new Intent(getActivity(), LoginActivity.class));
             getActivity().finish();

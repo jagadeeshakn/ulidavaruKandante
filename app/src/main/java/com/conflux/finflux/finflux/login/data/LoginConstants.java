@@ -5,4 +5,5 @@ package com.conflux.finflux.finflux.login.data;
  */
 public class LoginConstants {
     public static final String LOGIN_COUNT = "login count";
+    public static final String SUCCESSFUL = "Login Successful";
 }

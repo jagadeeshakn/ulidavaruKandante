@@ -22,17 +22,27 @@ public class PrefManager {
     private static final String PORT = "preferences_port";
     private static final String ORGANIZATION = "organization_name";
     private static final String CAN_USE_DEFAULT_CERTIFICATE = "can use default certificate";
+    private static final String IS_AUTENTICATED_USER = "authenticated user";
+    private static final String PAIRED_DEVICE = "paired_device";
+
+    public static SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());
+    }
 
     public static void canUseDefaultCertificate(boolean shouldByPassSSl){
         putBoolean(CAN_USE_DEFAULT_CERTIFICATE, shouldByPassSSl);
     }
 
-    public static boolean isSetUseDefaultCertificate(){
-        return getBoolean(CAN_USE_DEFAULT_CERTIFICATE,false);
+    public static void setAuthenticatedUserStatus(boolean isAuthenticated){
+        putBoolean(IS_AUTENTICATED_USER,isAuthenticated);
     }
 
-    public static SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());
+    public static boolean isUserAuthenticated(){
+        return getBoolean(IS_AUTENTICATED_USER,false);
+    }
+
+    public static boolean isSetUseDefaultCertificate(){
+        return getBoolean(CAN_USE_DEFAULT_CERTIFICATE,false);
     }
 
     public static void clearPrefs() {
@@ -159,6 +169,10 @@ public class PrefManager {
 
     public static String getPort() {
         return getString(PORT, "");
+    }
+
+    public static String getPairedDevice(){
+        return getString(PAIRED_DEVICE,"");
     }
 }
 

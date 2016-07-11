@@ -1,0 +1,13 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.conflux.finflux.finflux.settings.activity.ApplicationSettings$DevicePreferenceFragment"
+        android:title="@string/pref_header_device" />
+
+    <header
+        android:fragment="com.conflux.finflux.finflux.settings.activity.ApplicationSettings$CollectionSheetPreferenceFragment"
+        android:title="@string/pref_header_collectionsheet" />
+
+</preference-headers>

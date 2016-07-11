@@ -4,8 +4,7 @@ import com.conflux.finflux.finflux.collectionSheet.activity.CollectionSheetActiv
 import com.conflux.finflux.finflux.injection.module.ActivityModule;
 import com.conflux.finflux.finflux.injection.module.PerActivity;
 import com.conflux.finflux.finflux.login.activity.LoginActivity;
-
-import javax.inject.Singleton;
+import com.conflux.finflux.finflux.offline.activity.OfflineManagement;
 
 import dagger.Component;
 
@@ -16,7 +15,7 @@ import dagger.Component;
 @PerActivity
 @Component(dependencies = ApplicationComponent.class,modules = ActivityModule.class)
 public interface ActivityComponent {
-
-    void inject(CollectionSheetActivity collectionSheetActivity);
     void inject(LoginActivity loginActivity);
+    void inject(CollectionSheetActivity collectionSheetActivity);
+    void inject(OfflineManagement offlineManagement);
 }

@@ -1,12 +1,6 @@
 package com.conflux.finflux.finflux.login.data;
 
-import com.conflux.finflux.finflux.util.RealmString;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.RealmList;
-import io.realm.RealmObject;
 
 /**
  * Created by Praveen J U on 6/29/2016.
@@ -19,9 +13,18 @@ public class User  {
     private String base64EncodedAuthenticationKey;
     private boolean authenticated;
     private long officeId;
+    private Long staffId;
     private String officeName;
     private List<Role> roles;
     private List<String> permissions;
+
+    public Long getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Long staffId) {
+        this.staffId = staffId;
+    }
 
     public static String getAuthenticationKey() {
         return AUTHENTICATION_KEY;

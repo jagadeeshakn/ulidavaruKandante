@@ -6,7 +6,7 @@
     <color name="green">#57ae09</color>
     <color name="primary_dark">#E12929</color>
     <color name="primary_darker">#CC1D1D</color>
-    <color name="accent">#FFFFFF</color>
+    <color name="accent">#fcfcfc</color>
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
     <color name="oil">#333333</color>
@@ -16,8 +16,11 @@
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
-    <color name="primary">#2196F3</color>
+    <color name="primary">#1894f6</color>
     <color name="primary_text">#212121</color>
-
-
+    <color name="ash_grey">#b6b3b3</color>
+    <color name="ashs.grey">#e5e5e5</color>
+    <color name="shallow.green">#80c2ae</color>
+    <color name="shallow.green.light">#0e4534</color>
+    <color name="orange">#ff6f0f</color>
 </resources>

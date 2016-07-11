@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <ListPreference
+        android:key="paired_device"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/select_blue_tooth_device" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="enable_peripherals"
+        android:title="@string/pref_title_enable_peripherals" />
+
+    <!-- Allows the user to choose a ringtone in the 'notification' category. -->
+    <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+    <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
+    <SwitchPreference
+        android:dependency="enable_peripherals"
+        android:key="enable_printer"
+        android:title="@string/pref_title_enable_printer" />
+
+</PreferenceScreen>

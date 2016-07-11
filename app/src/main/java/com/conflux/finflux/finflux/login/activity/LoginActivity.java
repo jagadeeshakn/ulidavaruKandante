@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.conflux.finflux.finflux.R;
@@ -16,23 +16,33 @@ import com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity;
 import com.conflux.finflux.finflux.db.LoginUser;
 import com.conflux.finflux.finflux.db.LoginUserRole;
 import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
+import com.conflux.finflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
+import com.conflux.finflux.finflux.injection.component.ActivityComponent;
+import com.conflux.finflux.finflux.injection.component.DaggerActivityComponent;
+import com.conflux.finflux.finflux.injection.module.ActivityModule;
+import com.conflux.finflux.finflux.login.data.LoginConstants;
 import com.conflux.finflux.finflux.login.data.Role;
 import com.conflux.finflux.finflux.login.data.User;
 import com.conflux.finflux.finflux.login.presenter.LoginPresenter;
 import com.conflux.finflux.finflux.login.viewservices.LoginMvpView;
+import com.conflux.finflux.finflux.settings.activity.SettingsActivity;
 import com.conflux.finflux.finflux.util.Logger;
+import com.conflux.finflux.finflux.db.LoginUserPermission;
+import com.conflux.finflux.finflux.util.Network;
 import com.conflux.finflux.finflux.util.PrefManager;
 import com.conflux.finflux.finflux.util.RealmAutoIncrement;
-import com.conflux.finflux.finflux.util.RealmString;
 import com.conflux.finflux.finflux.util.Toaster;
+
+import java.security.cert.CertificateException;
 
 import javax.inject.Inject;
 import javax.net.ssl.SSLHandshakeException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmList;
 
@@ -47,9 +57,12 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     EditText _passwordText;
     @Bind(R.id.btn_login)
     Button _loginButton;
+    @Bind(R.id.btn_settings)
+    ImageView btn_settings;
 
     String username;
     String password;
+    private ActivityComponent mActivityComponent;
     @Inject
     Data mDataManager;
     @Inject
@@ -60,56 +73,34 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivityComponent().inject(this);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
         realm = Realm.getDefaultInstance();
         Logger.d(TAG, "The loginviewer is " + mLoginPresenter);
-        if (mLoginPresenter == null) {
-            mLoginPresenter = new LoginPresenter(mDataManager);
-        }
         mLoginPresenter.attachView(this);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                login(true);
+                login(false);
             }
         });
     }
 
-    public void login() {
-        Logger.d(TAG, "Login");
 
-        if (!validate()) {
-
-            onLoginFailed();
-            return;
+    public ActivityComponent getActivityComponent() {
+        if (mActivityComponent == null) {
+            mActivityComponent = DaggerActivityComponent.builder()
+                    .activityModule(new ActivityModule(this))
+                    .applicationComponent(FinfluxApplication.get(this).getComponent())
+                    .build();
         }
-
-        _loginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        String userName = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        return mActivityComponent;
     }
+
 
 
     @Override
@@ -122,6 +113,11 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
                 this.finish();
             }
         }
+    }
+
+    @OnClick(R.id.btn_settings)
+    public void initiateStartSettingsActivity(View view){
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     @Override
@@ -146,7 +142,6 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
         if (!validate())
             return;
         FinfluxApplication.baseApiManager = new BaseApiManager();
-
         PrefManager.canUseDefaultCertificate(shouldByPassSSLSecurity);
         String instanceUrl = PrefManager.getInstanceUrl();
         Log.i(getClass().getSimpleName(), "the instance url in login method is " + instanceUrl);
@@ -180,14 +175,20 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     public void onLoginSuccessful(final User user) {
         Logger.i(TAG, "Login Successful  " + user.getUsername());
         writeUserDetailsToTable(user);
+        setPreferenceAuthenticationStatus(user.isAuthenticated());
+        ApplicationAnalytics.sendLoginStatus(true,username, LoginConstants.SUCCESSFUL);
         loadDashBoard();
+    }
 
+    private void setPreferenceAuthenticationStatus(boolean isAuthenticated) {
+        PrefManager.setAuthenticatedUserStatus(isAuthenticated);
     }
 
     public void loadDashBoard() {
         Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
-        Logger.d(TAG, "on dashboard activity is calling");
+        Logger.d(TAG, "Authenticated user -> initializing start Dashboard activity");
         startActivity(intent);
+        finish();
     }
 
     private void writeUserDetailsToTable(final User user) {
@@ -200,27 +201,34 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
                     loginUser.setId(RealmAutoIncrement.getInstance(realm).getNextId(LoginUser.class));
                     loginUser.setUsername(user.getUsername());
                     loginUser.setUserId(user.getUserId());
+                    loginUser.setAuthenticated(user.isAuthenticated());
                     loginUser.setBase64EncodedAuthenticationKey(user.getBase64EncodedAuthenticationKey());
                     loginUser.setOfficeId(user.getOfficeId());
+                    if (user.getStaffId() != null) {
+                        loginUser.setStaffid(user.getStaffId());
+                    }
                     loginUser.setOfficeName(user.getOfficeName());
                     loginUser.setAuthenticated(user.isAuthenticated());
                     if (loginUser.getPermissions() == null) {
-                        RealmList<RealmString> realmStringsPermissions = new RealmList<RealmString>();
+                        RealmList<LoginUserPermission> realmStringsPermissions = new RealmList<LoginUserPermission>();
+
                         loginUser.setPermissions(realmStringsPermissions);
+                    }
                         //create the object of realm string and add each permissions to this list
                         for (String permission : user.getPermissions()) {
-                            RealmString permissionString = new RealmString();
+                            LoginUserPermission permissionString = realm.createObject(LoginUserPermission.class);
                             permissionString.setValue(permission);
                             permissionString.setFkLoginUserUserId(user.getUserId());
                             loginUser.getPermissions().add(permissionString);
                         }
-                    }
                     if (loginUser.getRoles() == null) {
                         RealmList<LoginUserRole> realmStringsRoles = new RealmList<LoginUserRole>();
                         loginUser.setRoles(realmStringsRoles);
+                    }
+
                         for (Role role : user.getRoles()) {
                             try {
-                                LoginUserRole loginUserRole = new LoginUserRole();
+                                LoginUserRole loginUserRole = realm.createObject(LoginUserRole.class);
                                 loginUserRole.setName(role.getName());
                                 loginUserRole.setFkLoginUserUserId(user.getUserId());
                                 loginUserRole.setDescription(role.getDescription());
@@ -229,7 +237,6 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
                                 e.printStackTrace();
                             }
                         }
-                    }
                     realm.copyToRealm(loginUser);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -240,15 +247,21 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
 
     @Override
     public void onLoginError(Throwable throwable) {
-        Logger.e(TAG, "Login failure " + throwable.getMessage());
+        Logger.e(TAG, "Login failure " + throwable.getMessage() + " clasue class " + throwable.getCause());
         try {
-            if (throwable.getCause() instanceof SSLHandshakeException) {
+            ApplicationAnalytics.sendLoginStatus(false,username,throwable.getMessage());
+            if (throwable.getCause() instanceof SSLHandshakeException || throwable.getCause() instanceof CertificateException) {
                 login(true);
             } else
                 Toaster.show(findViewById(android.R.id.content), throwable.getMessage());
 
         } catch (NullPointerException e) {
-
+            if (Network.getConnectivityStatusString(this).equals("Not connected to " +
+                    "Internet")) {
+                Toaster.show(findViewById(android.R.id.content), "Not connected to Network");
+            } else {
+                Toaster.show(findViewById(android.R.id.content), getString(R.string.error_unknown));
+            }
         }
     }
 

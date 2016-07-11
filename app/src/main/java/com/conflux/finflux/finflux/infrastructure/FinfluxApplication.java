@@ -9,6 +9,7 @@ import com.conflux.finflux.finflux.infrastructure.analytics.services.Application
 import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.injection.component.ApplicationComponent;
+
 import com.conflux.finflux.finflux.injection.component.DaggerApplicationComponent;
 import com.conflux.finflux.finflux.injection.module.ApplicationModule;
 import com.conflux.finflux.finflux.util.Logger;
@@ -55,6 +56,13 @@ public class FinfluxApplication extends Application {
 
         try {
             setup = new Setup();
+            boolean result = false;
+            result = setup.blActivateLibrary(this,R.raw.licence_full);
+            if(result){
+                Logger.d(getClass().getSimpleName(),"library status Active");
+            }else {
+                Logger.d(getClass().getSimpleName(),"library status Inactive");
+            }
         }catch (Exception e){
             Logger.d(getClass().getSimpleName(), "error " + e.getMessage());
         }

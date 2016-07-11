@@ -21,6 +21,11 @@ import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
 import com.conflux.finflux.finflux.injection.component.ActivityComponent;
 import com.conflux.finflux.finflux.injection.component.DaggerActivityComponent;
 import com.conflux.finflux.finflux.injection.module.ActivityModule;
+import com.conflux.finflux.finflux.logout.activity.LogoutActivity;
+import com.conflux.finflux.finflux.offline.activity.OfflineManagement;
+import com.conflux.finflux.finflux.settings.activity.ApplicationSettings;
+import com.conflux.finflux.finflux.util.Logger;
+import com.conflux.finflux.finflux.util.bluetooth.BluetoothAdmin;
 
 /**
  * Created by jagadeeshakn on 7/2/2016.
@@ -71,6 +76,7 @@ public class FinBaseActivity extends AppCompatActivity implements BaseActivityCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Logger.d(getClass().getSimpleName(),"The item selected is "+item.toString());
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -143,12 +149,33 @@ public class FinBaseActivity extends AppCompatActivity implements BaseActivityCa
                 startNavigationClickActivity(intent);
         }
         mDrawerLayout.closeDrawer(Gravity.LEFT);
-        mNavigationView.setCheckedItem(R.id.item_dashboard);
+        switch (item.getItemId()){
+            case R.id.item_settings : startSettingsActivity();
+                break;
+            case R.id.item_logout : itinializeLogout();
+                mNavigationView.setCheckedItem(R.id.item_logout);
+                break;
+            case R.id.item_offline : startOffilneActivity();
+                break;
+        }
         return true;
     }
 
-    protected void setupNavigationBar() {
 
+    private void startOffilneActivity(){
+        startActivity(new Intent(this, OfflineManagement.class));
+    }
+
+    private void startSettingsActivity(){
+        startActivity(new Intent(this, ApplicationSettings.class));
+        BluetoothAdmin.setBluetooth(true);
+    }
+
+    private void itinializeLogout(){
+        startActivity(new Intent(this, LogoutActivity.class));
+    }
+
+    protected void setupNavigationBar() {
         // setup navigation view
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(this);

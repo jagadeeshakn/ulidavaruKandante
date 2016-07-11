@@ -24,10 +24,6 @@ public class LoginPresenter implements Presenter<LoginMvpView> {
 
     @Inject
     public LoginPresenter(Data dataManager) {
-        if(dataManager == null){
-            Logger.d("DATA","data manager object is null");
-            dataManager = new Data(new BaseApiManager());
-        }
         mDataManager = dataManager;
     }
 

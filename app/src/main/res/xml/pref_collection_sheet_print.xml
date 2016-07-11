@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="enable_collectionsheet_client_receipt"
+        android:title="@string/pref_title_enable_client_copy_collection_receipt" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="enable_collectionsheet_office_copy"
+        android:title="@string/pref_title_enable_office_copy_collection_receipt" />
+
+</PreferenceScreen>

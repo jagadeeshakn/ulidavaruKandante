@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.conflux.finflux.finflux.offline.fragment.DatePicker">
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:text="@string/button.submit"
+        android:layout_alignParentBottom="true"
+
+        style="@style/SubmitButton"
+        android:layout_height="wrap_content" />
+
+    <com.squareup.timessquare.CalendarPickerView
+        android:id="@+id/calendar_view"
+        android:layout_above="@id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>

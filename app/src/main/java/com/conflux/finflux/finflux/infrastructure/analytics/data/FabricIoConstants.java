@@ -15,4 +15,6 @@ public class FabricIoConstants {
     public static final String ACTIVATION_KEY = "Activation Key";
     public static final String FIRST_LOGIN = "First Login";
     public static final String ORGANIZATION_NAME = "Organization Name";
+    public static final String USERNAME = "Username";
+    public static final String MESSAGE ="Message";
 }

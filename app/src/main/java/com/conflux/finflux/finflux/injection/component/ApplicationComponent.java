@@ -3,6 +3,7 @@ package com.conflux.finflux.finflux.injection.component;
 import android.app.Application;
 import android.content.Context;
 
+import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.finflux.injection.module.ApplicationContext;
 import com.conflux.finflux.finflux.injection.module.ApplicationModule;
 import com.conflux.finflux.finflux.injection.module.PerActivity;
@@ -24,6 +25,7 @@ public interface ApplicationComponent {
     Context context();
 
     Application application();
+    Data mDataManager();
 
     Bus eventBus();
 }

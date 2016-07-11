@@ -1,11 +1,5 @@
 package com.conflux.finflux.finflux.db;
 
-import com.conflux.finflux.finflux.login.data.Role;
-import com.conflux.finflux.finflux.util.RealmAutoIncrement;
-import com.conflux.finflux.finflux.util.RealmString;
-
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -22,9 +16,19 @@ public class LoginUser extends RealmObject {
     private String base64EncodedAuthenticationKey;
     private boolean authenticated;
     private long officeId;
+    private Long staffid;
+
+    public Long getStaffid() {
+        return staffid;
+    }
+
+    public void setStaffid(Long staffid) {
+        this.staffid = staffid;
+    }
+
     private String officeName;
     private RealmList<LoginUserRole> roles;
-    private RealmList<RealmString> permissions;
+    private RealmList<LoginUserPermission> permissions;
 
     public long getId() {
         return id;
@@ -94,11 +98,11 @@ public class LoginUser extends RealmObject {
         this.roles = roles;
     }
 
-    public RealmList<RealmString> getPermissions() {
+    public RealmList<LoginUserPermission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(RealmList<RealmString> permissions) {
+    public void setPermissions(RealmList<LoginUserPermission> permissions) {
         this.permissions = permissions;
     }
 }

@@ -67,5 +67,18 @@
             />
          
     </group>
+    <group android:checkableBehavior="none"
+        android:id="@+id/group5">
+        <item android:id="@+id/item_settings"
+            android:checked="false"
+            android:icon="@drawable/ic_setting_dark"
+            android:title="@string/title_activity_settings"/>
+        <item
+            android:id="@+id/item_logout"
+            android:checked="false"
+            android:icon="@drawable/ic_offline"
+            android:title="@string/logout"
+            />
+    </group>
 
 </menu>

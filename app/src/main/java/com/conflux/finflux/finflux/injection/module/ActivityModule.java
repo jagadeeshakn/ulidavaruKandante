@@ -3,6 +3,8 @@ package com.conflux.finflux.finflux.injection.module;
 import android.app.Activity;
 import android.content.Context;
 
+import com.conflux.finflux.finflux.util.event.EventBus;
+
 import javax.inject.Singleton;
 
 import dagger.Module;

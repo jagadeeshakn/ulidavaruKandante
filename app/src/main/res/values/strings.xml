@@ -9,6 +9,7 @@
     <string name="title_activity_fullscreen1">FullscreenActivity1</string>
     <string name="save">Save</string>
 
+
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="title_activity_application_setup">ApplicationSetup</string>
     <string name="hello_world">Hello world!</string>
@@ -16,7 +17,7 @@
     <string name="activation_key">Activation Key</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_application_activation">ApplicationActivation</string>
-    <string name="title_sliding_activity">Sliding window Navigation</string>
+    <string name="title_sliding_activity">Finflux</string>
 
     //login strings
     <string name="url_error_empty">Please provide valid url/ip address.</string>
@@ -31,6 +32,7 @@
     <string name="copy_right">\u00a9 2016 Conflux. All rights reserved</string>
     <string name="no_password">Password cannot be empty.</string>
     <string name="no_username">enter a valid username.</string>
+    <string name="error_unknown">There was some error processing your request.</string>
 
     <!-- General Terms Begin Here -->
     <string name="dashboard">Dashboard</string>
@@ -43,4 +45,93 @@
     <string name="close_drawer">Close Drawer</string>
     <string name="survey">Survey</string>
     <string name="offline">Offline *</string>
+
+
+    //logout
+    <string name="logout">Logout</string>
+
+    //Settings
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_application_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- settings  -->
+    <string name="pref_header_collectionsheet">Collectionsheet Print Settings</string>
+    <string name="dialog_turn_on_printing_device">Please turn on Printer and then click Ok.</string>
+    <string name="error_select_paired_device">Please Select Paired device.</string>
+    <string name="alert_message">Alert</string>
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="select_blue_tooth_device">Select Bluetooth paired device</string>
+    <string name="enable_peripherals">enable_peripherals</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_device">Device Settings</string>
+
+    <string name="error_connecting_printer">Unable to connect printer.</string>
+
+    <string name="pref_title_enable_peripherals">Enable Peripheral</string>
+    <string name="pref_title_enable_client_copy_collection_receipt">Print client copy of collection receipt.</string>
+    <string name="pref_title_enable_office_copy_collection_receipt">Print office copy of collection receipt.</string>
+    <string name="peripheral_enable">Peripheral Enabled</string>
+    <string name="peripheral_diabled">Peripheral Disabled</string>
+    <string name="error_enable_printer">Please go to Settigns -> Device Settings and enable printer.</string>
+
+    <string name="pref_title_enable_printer">Enable Printer</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_print_office_copy_receipt">Print office copy of Receipt</string>
+
+
+    <!--offline strings starts here-->
+    <string name="item.lable.fetch.collection">Fetch Collections</string>
+    <string name="item.lable.push.collection">Push Collections</string>
+    <string name="title_activity_offline_management">Offline Management</string>
+    <string name="title_activity_fetch_collection">FetchCollection</string>
+
+
+    <!--datepicker fragment-->
+    <string name="button.submit">Submit</string>
+    <string name="select.date.range">Select date</string>
 </resources>

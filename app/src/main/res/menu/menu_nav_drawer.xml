@@ -22,7 +22,7 @@
         <item
             android:id="@+id/item_collection"
             android:checked="false"
-            android:icon="@drawable/ic_collections"
+            android:icon="@drawable/ic_collection_sheet"
             android:title="@string/collections"
             />
 

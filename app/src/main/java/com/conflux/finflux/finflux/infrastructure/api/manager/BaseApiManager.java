@@ -2,6 +2,7 @@ package com.conflux.finflux.finflux.infrastructure.api.manager;
 
 import android.widget.BaseAdapter;
 
+import com.conflux.finflux.finflux.collectionSheet.services.CollectionSheetServices;
 import com.conflux.finflux.finflux.infrastructure.JsonDateSerializer;
 import com.conflux.finflux.finflux.infrastructure.api.BaseUrl;
 import com.conflux.finflux.finflux.infrastructure.api.interceptor.ApiRequestInterceptor;
@@ -20,6 +21,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -30,9 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Praveen J U on 6/29/2016.
  */
 public class BaseApiManager {
+    private final String TAG = getClass().getSimpleName();
     private BaseUrl baseUrl = new BaseUrl();
     private AuthService authApi;
-    private String BASE_URL = baseUrl.getUrl();
+    private CollectionSheetServices productiveApi;
+    private String BASE_URL;
     private boolean shouldByPassSSLCerti = false;
 
     public BaseApiManager(){
@@ -53,6 +57,8 @@ public class BaseApiManager {
 
     public void setApi(){
         createAuthApi();
+        Logger.d(TAG,"The Url is after set up"+baseUrl.getUrl());
+        productiveApi=createApi(CollectionSheetServices.class,baseUrl.getUrl());
     }
 
 
@@ -60,14 +66,18 @@ public class BaseApiManager {
         return authApi;
     }
 
+    public CollectionSheetServices getProductiveApi() {
+        return productiveApi;
+    }
+
     //retrofit buider
-    private <T> T createApi(Class<T> clazz, String baseUrl) {
+    private <T> T createApi(Class<T> clazz, final String url) {
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDateSerializer()).create();
-        Logger.d(getClass().getSimpleName(),"the Url is "+baseUrl);
+        Logger.d(getClass().getSimpleName(), "the Url is " + baseUrl.getUrl());
         return new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(baseUrl.getUrl())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(new FinfluxOkHttpClient().getMifosOkHttpClient())

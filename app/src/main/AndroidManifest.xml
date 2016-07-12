@@ -58,6 +58,13 @@
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".logout.activity.LogoutActivity" />
 
+        <activity
+            android:name=".collectionSheet.activity.CollectionSheetActivity"
+            android:label="@string/common_signin_button_text_long"
+            android:theme="@style/FullscreenTheme">
+
+        </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

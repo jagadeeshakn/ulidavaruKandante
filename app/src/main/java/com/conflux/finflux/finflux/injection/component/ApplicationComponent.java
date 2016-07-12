@@ -2,6 +2,7 @@ package com.conflux.finflux.finflux.injection.component;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.finflux.injection.module.ApplicationContext;

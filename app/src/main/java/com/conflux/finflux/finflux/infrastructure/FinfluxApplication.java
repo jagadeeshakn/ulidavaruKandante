@@ -9,17 +9,13 @@ import com.conflux.finflux.finflux.infrastructure.analytics.services.Application
 import com.conflux.finflux.finflux.infrastructure.analytics.data.FabricIoConstants;
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.injection.component.ApplicationComponent;
-
 import com.conflux.finflux.finflux.injection.component.DaggerApplicationComponent;
 import com.conflux.finflux.finflux.injection.module.ApplicationModule;
 import com.conflux.finflux.finflux.util.Logger;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.leopard.api.Setup;
-import com.orm.SugarApp;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-
-import java.util.Set;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -93,7 +89,8 @@ public class FinfluxApplication extends Application {
 
     public ApplicationComponent getComponent() {
         if (mApplicationComponent == null) {
-            mApplicationComponent = DaggerApplicationComponent.builder()
+            mApplicationComponent =
+                    DaggerApplicationComponent.builder()
                     .applicationModule(new ApplicationModule(this))
                     .build();
         }

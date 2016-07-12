@@ -18,13 +18,6 @@ public class User  {
     private List<Role> roles;
     private List<String> permissions;
 
-    public Long getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(Long staffId) {
-        this.staffId = staffId;
-    }
 
     public static String getAuthenticationKey() {
         return AUTHENTICATION_KEY;
@@ -68,6 +61,14 @@ public class User  {
 
     public void setOfficeId(long officeId) {
         this.officeId = officeId;
+    }
+
+    public Long getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Long staffId) {
+        this.staffId = staffId;
     }
 
     public String getOfficeName() {

@@ -15,6 +15,7 @@ public class CollectionSheetActivity extends FinBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_container);
+        getActivityComponent().inject(this);
         replaceFragment(CollectionSheetCenterList.newInstance(),false,R.id.container);
     }
 }

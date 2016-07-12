@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.conflux.finflux.finflux.R;
+import com.conflux.finflux.finflux.core.FinBaseActivity;
 import com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity;
 import com.conflux.finflux.finflux.db.LoginUser;
 import com.conflux.finflux.finflux.db.LoginUserRole;
@@ -20,8 +21,6 @@ import com.conflux.finflux.finflux.infrastructure.analytics.services.Application
 import com.conflux.finflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.finflux.injection.component.ActivityComponent;
-import com.conflux.finflux.finflux.injection.component.DaggerActivityComponent;
-import com.conflux.finflux.finflux.injection.module.ActivityModule;
 import com.conflux.finflux.finflux.login.data.LoginConstants;
 import com.conflux.finflux.finflux.login.data.Role;
 import com.conflux.finflux.finflux.login.data.User;
@@ -46,7 +45,7 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmList;
 
-public class LoginActivity extends AppCompatActivity implements LoginMvpView {
+public class LoginActivity extends FinBaseActivity implements LoginMvpView {
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
@@ -64,9 +63,9 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
     String password;
     private ActivityComponent mActivityComponent;
     @Inject
-    Data mDataManager;
+    public Data mDataManager;
     @Inject
-    LoginPresenter mLoginPresenter;
+    public LoginPresenter mLoginPresenter;
     private ProgressDialog progress;
     private Realm realm;
 
@@ -90,16 +89,6 @@ public class LoginActivity extends AppCompatActivity implements LoginMvpView {
         });
     }
 
-
-    public ActivityComponent getActivityComponent() {
-        if (mActivityComponent == null) {
-            mActivityComponent = DaggerActivityComponent.builder()
-                    .activityModule(new ActivityModule(this))
-                    .applicationComponent(FinfluxApplication.get(this).getComponent())
-                    .build();
-        }
-        return mActivityComponent;
-    }
 
 
 

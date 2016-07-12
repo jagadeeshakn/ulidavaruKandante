@@ -1,7 +1,12 @@
 package com.conflux.finflux.finflux.infrastructure.api.manager;
 
+import com.conflux.finflux.finflux.collectionSheet.data.Payload;
+import com.conflux.finflux.finflux.collectionSheet.data.ProductiveCollectionData;
+import com.conflux.finflux.finflux.db.LoginUser;
 import com.conflux.finflux.finflux.login.data.User;
 import com.conflux.finflux.finflux.util.Logger;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -35,7 +40,13 @@ public class Data {
      * @return Basic OAuth
      */
     public Observable<User> login(String username, String password) {
-        Logger.e(getClass().getSimpleName(),"Login api");
+        Logger.e(getClass().getSimpleName(), "Login api");
         return mBaseApiManager.getAuthApi().authenticate(username, password);
     }
+
+    public Observable<ArrayList<ProductiveCollectionData>>getProductiveCollectionSheet(Payload payload){
+        Logger.d(getClass().getSimpleName(),"productive collection sheet api");
+        return mBaseApiManager.getProductiveApi().getProductiveSheet(payload.getDateFormat(),payload.getLocale(),payload.getMeetingDate(),payload.getOfficeId(),payload.getStaffId());
+    }
+
 }

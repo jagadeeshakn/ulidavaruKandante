@@ -147,7 +147,7 @@ public class PrefManager {
     }
 
     public static String getInstanceUrl() {
-        return getString(INSTANCE_URL, "");
+        return getString(INSTANCE_URL, "htts://demov2.confluxcloud.com/fineract-provider/api/v1/");
     }
 
     public static void setInstanceDomain(String instanceDomain) {

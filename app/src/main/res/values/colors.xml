@@ -23,4 +23,7 @@
     <color name="shallow.green">#80c2ae</color>
     <color name="shallow.green.light">#0e4534</color>
     <color name="orange">#ff6f0f</color>
+    <color name="finflux_theme_color">#01AAEC</color>
+    <color name="red_dark">#ffcc0000</color>
+
 </resources>

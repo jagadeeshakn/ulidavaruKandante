@@ -16,7 +16,6 @@ import android.view.View;
 
 import com.conflux.finflux.finflux.R;
 import com.conflux.finflux.finflux.collectionSheet.activity.CollectionSheetActivity;
-import com.conflux.finflux.finflux.core.BaseActivityCallback;
 import com.conflux.finflux.finflux.infrastructure.FinfluxApplication;
 import com.conflux.finflux.finflux.injection.component.ActivityComponent;
 import com.conflux.finflux.finflux.injection.component.DaggerActivityComponent;

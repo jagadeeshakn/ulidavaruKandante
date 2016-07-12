@@ -1,5 +1,7 @@
 package com.conflux.finflux.finflux.infrastructure.api;
 
+import com.conflux.finflux.finflux.util.PrefManager;
+
 /**
  * Created by Praveen J U on 6/29/2016.
  */
@@ -10,7 +12,7 @@ public class BaseUrl {
     // "/" in the last of the base url always
 
 
-    private static String url;
+    private String url;
 
     public void updateInstanceUrl(String instanceUrl) {
         this.url = instanceUrl;
@@ -18,9 +20,7 @@ public class BaseUrl {
 
 
     public String getUrl() {
-        if (url == null)
-            return PROTOCOL_HTTPS + API_ENDPOINT + API_PATH;
-        return url;
+        return PrefManager.getInstanceUrl();
     }
 
 }

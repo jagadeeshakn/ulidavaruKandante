@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.conflux.finflux.finflux.offline.activity.OfflineManagement">
+    tools:context="com.conflux.finflux.offline.activity.OfflineManagement">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

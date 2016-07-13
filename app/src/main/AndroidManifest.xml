@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.conflux.finflux.finflux">
+    package="com.conflux.finflux">
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,13 +23,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".infrastructure.FinfluxApplication"
+        android:name="com.conflux.finflux.infrastructure.FinfluxApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".infrastructure.SplashScreen"
+            android:name="com.conflux.finflux.infrastructure.SplashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
@@ -40,27 +40,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FullscreenActivity"
+            android:name="com.conflux.finflux.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".infrastructure.ApplicationSetup"
+            android:name="com.conflux.finflux.infrastructure.ApplicationSetup"
             android:label="@string/title_activity_application_setup"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".infrastructure.ApplicationActivation"
+            android:name="com.conflux.finflux.infrastructure.ApplicationActivation"
             android:label="@string/title_activity_application_activation"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".dashboard.activity.DashBoardActivity"
+            android:name="com.conflux.finflux.dashboard.activity.DashBoardActivity"
             android:label="@string/title_sliding_activity"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".logout.activity.LogoutActivity" />
+        <activity android:name="com.conflux.finflux.logout.activity.LogoutActivity" />
 
         <activity
             android:name=".collectionSheet.activity.CollectionSheetActivity"
-            android:label="@string/common_signin_button_text_long"
+            android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
 
         </activity>
@@ -73,30 +73,30 @@
             android:value="0536134ea9ec69fa467ff2d76607a4796d2907eb" />
 
         <activity
-            android:name=".login.activity.LoginActivity"
+            android:name="com.conflux.finflux.login.activity.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/FullscreenTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".settings.activity.SettingsActivity"
+            android:name="com.conflux.finflux.settings.activity.SettingsActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".login.activity.LoginActivity"
+            android:parentActivityName="com.conflux.finflux.login.activity.LoginActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.conflux.finflux.finflux.login.activity.LoginActivity" />
+                android:value="com.conflux.finflux.login.activity.LoginActivity" />
         </activity>
         <activity
-            android:name=".settings.activity.ApplicationSettings"
+            android:name="com.conflux.finflux.settings.activity.ApplicationSettings"
             android:label="@string/title_activity_application_settings"
-            android:parentActivityName=".dashboard.activity.DashBoardActivity">
+            android:parentActivityName="com.conflux.finflux.dashboard.activity.DashBoardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity" />
+                android:value="com.conflux.finflux.dashboard.activity.DashBoardActivity" />
         </activity>
 
         <receiver
-            android:name=".util.bluetooth.BluetoothStateChanged"
+            android:name="com.conflux.finflux.util.bluetooth.BluetoothStateChanged"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -107,22 +107,22 @@
         </receiver>
 
         <activity
-            android:name=".offline.activity.OfflineManagement"
+            android:name="com.conflux.finflux.offline.activity.OfflineManagement"
             android:label="@string/title_activity_offline_management"
-            android:parentActivityName=".dashboard.activity.DashBoardActivity"
+            android:parentActivityName="com.conflux.finflux.dashboard.activity.DashBoardActivity"
             android:theme="@style/FullscreenTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.conflux.finflux.finflux.dashboard.activity.DashBoardActivity" />
+                android:value="com.conflux.finflux.dashboard.activity.DashBoardActivity" />
         </activity>
         <activity
-            android:name=".offline.activity.FetchCollection"
+            android:name="com.conflux.finflux.offline.activity.FetchCollection"
             android:label="@string/title_activity_fetch_collection"
-            android:parentActivityName=".offline.activity.OfflineManagement"
+            android:parentActivityName="com.conflux.finflux.offline.activity.OfflineManagement"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.conflux.finflux.finflux.offline.activity.OfflineManagement" />
+                android:value="com.conflux.finflux.offline.activity.OfflineManagement" />
         </activity>
     </application>
 

@@ -6,7 +6,9 @@ import com.conflux.finflux.collectionSheet.fragment.CollectionSheetGroupList;
 import com.conflux.finflux.injection.module.ActivityModule;
 import com.conflux.finflux.injection.module.PerActivity;
 import com.conflux.finflux.login.activity.LoginActivity;
+import com.conflux.finflux.offline.activity.FetchCollection;
 import com.conflux.finflux.offline.activity.OfflineManagement;
+import com.conflux.finflux.offline.fragment.MeetingsFallCenterListFragment;
 
 import dagger.Component;
 
@@ -22,4 +24,6 @@ public interface ActivityComponent {
     void inject(CollectionSheetCenterList collectionSheetCenterList);
     void inject(CollectionSheetGroupList collectionSheetGroupList);
     void inject(OfflineManagement offlineManagement);
+    void inject(FetchCollection fetchCollection);
+    void inject(MeetingsFallCenterListFragment meetingsFallCenterListFragment);
 }

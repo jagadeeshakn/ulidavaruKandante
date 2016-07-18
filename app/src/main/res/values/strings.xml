@@ -129,6 +129,16 @@
     <string name="item.lable.push.collection">Push Collections</string>
     <string name="title_activity_offline_management">Offline Management</string>
     <string name="title_activity_fetch_collection">FetchCollection</string>
+    <string name="menu_change_current_date">Date Settings</string>
+    <string name="error.offline.date.range.exception">You can Download Collection meeting for only</string>
+    <string name="offline.center.list.date">Date</string>
+    <string name="offline.center.list.day">Day</string>
+    <string name="title.center.name">Center</string>
+    <string name="label.center.total.due">Total due</string>
+    <string name="label.center.total.collected">Total Collected</string>
+    <string name="offline.center.status">Status</string>
+    <string name="collection.status.completed">Collection completed</string>
+    <string name="collection.status.can.download">Available to Download</string>
 
 
     <!--datepicker fragment-->

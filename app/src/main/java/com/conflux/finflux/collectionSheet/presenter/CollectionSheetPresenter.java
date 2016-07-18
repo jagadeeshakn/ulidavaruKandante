@@ -50,8 +50,6 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                     @Override
                     public void onCompleted() {
                         mCollectionMvpView.showProgressbar(false);
-
-
                     }
 
                     @Override

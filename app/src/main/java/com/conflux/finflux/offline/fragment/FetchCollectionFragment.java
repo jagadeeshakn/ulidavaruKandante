@@ -1,4 +1,4 @@
-package com.conflux.finflux.offline.activity;
+package com.conflux.finflux.offline.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -40,7 +40,7 @@ public class FetchCollectionFragment extends Fragment {
 
     @Subscribe
     public void datePickedEvent(DatePickedEvent event){
-        Logger.d(TAG,"The Selected Dates are "+event.getSelectedDates());
+        Logger.d(TAG,"The Selected Dates are in list are "+event.getSelectedDates());
     }
 
     @Override

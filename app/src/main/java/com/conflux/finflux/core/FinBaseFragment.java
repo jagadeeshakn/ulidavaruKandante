@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.conflux.finflux.R;
+
 /**
  * Created by jagadeeshakn on 7/8/2016.
  */
@@ -57,7 +59,7 @@ public class FinBaseFragment extends Fragment {
     }
 
     protected void showFinfluxProgressDialog() {
-        showFinfluxProgressDialog("Working...");
+        showFinfluxProgressDialog(getString(R.string.please_wait));
     }
 
     protected void showFinfluxProgressDialog(String message) {

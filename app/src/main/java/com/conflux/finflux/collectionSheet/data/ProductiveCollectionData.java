@@ -43,7 +43,7 @@ public class ProductiveCollectionData implements Parcelable{
 
     @Override
     public String toString() {
-        return "FinCenterCollectionData{" +
+        return "ProductiveCollectionData{" +
                 "staffId=" + staffId +
                 ", staffName='" + staffName + '\'' +
                 ", meetingFallCenters=" + meetingFallCenters +

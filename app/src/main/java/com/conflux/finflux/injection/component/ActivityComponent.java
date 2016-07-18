@@ -2,6 +2,7 @@ package com.conflux.finflux.injection.component;
 
 import com.conflux.finflux.collectionSheet.activity.CollectionSheetActivity;
 import com.conflux.finflux.collectionSheet.fragment.CollectionSheetCenterList;
+import com.conflux.finflux.collectionSheet.fragment.CollectionSheetGroupList;
 import com.conflux.finflux.injection.module.ActivityModule;
 import com.conflux.finflux.injection.module.PerActivity;
 import com.conflux.finflux.login.activity.LoginActivity;
@@ -19,5 +20,6 @@ public interface ActivityComponent {
     void inject(LoginActivity loginActivity);
     void inject(CollectionSheetActivity collectionSheetActivity);
     void inject(CollectionSheetCenterList collectionSheetCenterList);
+    void inject(CollectionSheetGroupList collectionSheetGroupList);
     void inject(OfflineManagement offlineManagement);
 }

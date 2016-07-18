@@ -135,7 +135,16 @@
     <string name="button.submit">Submit</string>
     <string name="select.date.range">Select date</string>
 
+    <!--error dialog fragment-->
+    <string name="error_message">Error Message</string>
+    <string name="bt_ok">Okay</string>
+    <string name="bt_cancel">Cancel</string>
+    <string name="alert">Alert</string>
+    <string name="please_wait">Please wait....</string>
+
     <!-- Collection sheet strings -->
+    <string name="collection_sheet">Collection Sheet</string>
+    <string name="no_collection_sheet">There is no collection for Date</string>
     <string name="today_collection">Collected</string>
     <string name="collection_due">Due</string>
     <string name="center_meeting">center meeting</string>

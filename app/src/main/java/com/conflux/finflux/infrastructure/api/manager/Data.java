@@ -1,6 +1,7 @@
 package com.conflux.finflux.infrastructure.api.manager;
 
 
+import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
 import com.conflux.finflux.login.data.User;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import retrofit2.http.Body;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -44,8 +47,12 @@ public class Data {
     }
 
     public Observable<ArrayList<ProductiveCollectionData>>getProductiveCollectionSheet(Payload payload){
-        Logger.d(getClass().getSimpleName(),"productive collection sheet api");
-        return mBaseApiManager.getProductiveApi().getProductiveSheet(payload.getDateFormat(),payload.getLocale(),payload.getMeetingDate(),payload.getOfficeId(),payload.getStaffId());
+        Logger.d(getClass().getSimpleName(), "productive collection sheet api");
+        return mBaseApiManager.getProductiveApi().getProductiveSheet(payload.getDateFormat(), payload.getLocale(), payload.getMeetingDate(), payload.getOfficeId(), payload.getStaffId());
     }
 
+    public Observable<CollectionSheetData>getCenterCollectionSheet(Long centerId,Payload payload){
+        Logger.d(getClass().getSimpleName(), "center collection sheet api");
+        return mBaseApiManager.getCollectionApi().getCollectionSheet(centerId,payload);
+    }
 }

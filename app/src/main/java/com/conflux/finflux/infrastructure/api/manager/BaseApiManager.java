@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Date;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -23,37 +24,30 @@ public class BaseApiManager {
     private static BaseUrl baseUrl = new BaseUrl();
     private static AuthService authApi;
     private static CollectionSheetServices productiveApi;
+    private static CollectionSheetServices collectionApi;
     private String BASE_URL;
     private boolean shouldByPassSSLCerti = false;
 
-    public BaseApiManager(){
+    public BaseApiManager() {
         createService();
     }
 
-    public void setShouldByPassSSL(boolean shouldByPassSSL){
+    public void setShouldByPassSSL(boolean shouldByPassSSL) {
         shouldByPassSSLCerti = shouldByPassSSL;
         createService();
     }
 
 
-    public  void updateEndPoint(String endpoint){
+    public void updateEndPoint(String endpoint) {
         baseUrl.updateInstanceUrl(endpoint);
         BASE_URL = baseUrl.getUrl();
         createService();
     }
 
-    public static void setApi(){
+    public static void setApi() {
         createAuthApi();
-        productiveApi=createApi(CollectionSheetServices.class);
-    }
-
-
-    public AuthService getAuthApi() {
-        return authApi;
-    }
-
-    public CollectionSheetServices getProductiveApi() {
-        return productiveApi;
+        productiveApi = createApi(CollectionSheetServices.class);
+        collectionApi = createApi(CollectionSheetServices.class);
     }
 
     //retrofit buider
@@ -87,6 +81,17 @@ public class BaseApiManager {
     }
 
 
+    public AuthService getAuthApi() {
+        return authApi;
+    }
+
+    public CollectionSheetServices getProductiveApi() {
+        return productiveApi;
+    }
+
+    public CollectionSheetServices getCollectionApi() {
+        return collectionApi;
+    }
 
 
 }

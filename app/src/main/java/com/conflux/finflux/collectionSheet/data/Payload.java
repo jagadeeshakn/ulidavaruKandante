@@ -12,6 +12,8 @@ public class Payload implements Parcelable {
     private Long officeId;
     private Long staffId;
     private String meetingDate;
+    private String transactionDate;
+    private long calendarId;
 
     public String getDateFormat() {
         return dateFormat;
@@ -53,6 +55,22 @@ public class Payload implements Parcelable {
         this.meetingDate = meetingDate;
     }
 
+    public long getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(long calendarId) {
+        this.calendarId = calendarId;
+    }
+
+    public String getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
     @Override
     public String toString() {
         return "Payload{" +
@@ -61,6 +79,8 @@ public class Payload implements Parcelable {
                 ", officeId=" + officeId +
                 ", staffId=" + staffId +
                 ", meetingDate='" + meetingDate + '\'' +
+                ", transactionDate='" + transactionDate + '\'' +
+                ", calendarId=" + calendarId +
                 '}';
     }
 

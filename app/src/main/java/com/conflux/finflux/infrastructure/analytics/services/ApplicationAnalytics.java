@@ -26,7 +26,13 @@ public class ApplicationAnalytics {
                 .putMethod("Digits")
                 .putSuccess(status)
                 .putCustomAttribute(FabricIoConstants.USERNAME, username)
-                .putCustomAttribute(FabricIoConstants.MESSAGE,message)
+                .putCustomAttribute(FabricIoConstants.MESSAGE, message)
                 .putCustomAttribute(FabricIoConstants.ORGANIZATION_NAME, PrefManager.getOrganization()));
+    }
+
+    public static void sendEventLogs(String eventName,String message){
+        String organizationName=PrefManager.getOrganization();
+        Answers.getInstance().logCustom(new CustomEvent(organizationName+"_"+eventName)
+                .putCustomAttribute(organizationName+"_"+eventName,message));
     }
 }

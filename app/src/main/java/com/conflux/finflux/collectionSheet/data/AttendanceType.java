@@ -88,4 +88,15 @@ public class AttendanceType implements Parcelable {
             return new AttendanceType[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "AttendanceType{" +
+                "attendanceTypeId=" + attendanceTypeId +
+                ", code='" + code + '\'' +
+                ", value='" + value + '\'' +
+                ", clientId=" + clientId +
+                ", client=" + client +
+                '}';
+    }
 }

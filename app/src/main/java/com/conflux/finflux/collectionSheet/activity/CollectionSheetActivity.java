@@ -16,6 +16,7 @@ public class CollectionSheetActivity extends FinBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_container);
         getActivityComponent().inject(this);
+        showBackButton();
         replaceFragment(CollectionSheetCenterList.newInstance(),false,R.id.container);
     }
 }

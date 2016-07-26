@@ -139,7 +139,10 @@
     <string name="offline.center.status">Status</string>
     <string name="collection.status.completed">Collection completed</string>
     <string name="collection.status.can.download">Available to Download</string>
-
+    <string name="button.label.download">Download</string>
+    <string name="center.download.status.already.downloaded">Center already Downloaded</string>
+    <string name="center.download.status.center.no.collection">Center has no collection</string>
+    <string name="center.download.status.center.collection.completed">Center Collection Completed</string>
 
     <!--datepicker fragment-->
     <string name="button.submit">Submit</string>

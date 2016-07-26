@@ -29,12 +29,14 @@
                 android:layout_weight="1"
                 android:id="@+id/text_view_date"
                 android:text="@string/offline.center.list.date"
+                style="@style/ListItemInfo"
                 android:textAlignment="viewStart"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
+                style="@style/ListItemInfo"
                 android:id="@+id/text_view_day"
                 android:text="@string/offline.center.list.day"/>
         </LinearLayout>
@@ -48,6 +50,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:id="@+id/text_view_center_name"
+               style="@style/ListTitle"
                android:text="@string/title.center.name"/>
 
        </LinearLayout>
@@ -64,12 +67,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/text_view_total_due"
+                style="@style/ListItemInfo"
                 android:text="@string/label.center.total.due"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_total_collected"
                 android:layout_weight="1"
+                style="@style/ListItemInfo"
                 android:text="@string/label.center.total.collected"
                 android:gravity="end"/>
         </LinearLayout>
@@ -82,24 +87,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_status"
+                style="@style/ListItemStatus"
                 android:text="@string/offline.center.status"/>
         </LinearLayout>
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textColor="@color/blue"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/blue"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
 </android.support.v7.widget.CardView>

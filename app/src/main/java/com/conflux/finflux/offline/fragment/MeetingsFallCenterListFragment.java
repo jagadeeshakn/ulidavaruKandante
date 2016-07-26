@@ -8,10 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetConstants;
+import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.ExtendedProductionCollectiondata;
+import com.conflux.finflux.collectionSheet.data.GenerateCollectionSheetPayloadAssembler;
 import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
@@ -20,9 +23,9 @@ import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.core.FinBaseActivity;
 import com.conflux.finflux.core.FinBaseFragment;
 import com.conflux.finflux.db.LoginUser;
-import com.conflux.finflux.offline.data.CenterWIthMeetingAndCheckedStatus;
+import com.conflux.finflux.offline.data.CenterListHelper;
 import com.conflux.finflux.offline.data.DateString;
-import com.conflux.finflux.offline.fragment.dummy.DummyContent;
+import com.conflux.finflux.offline.data.ProductionCollectionSheedDataAssembler;
 import com.conflux.finflux.offline.fragment.dummy.DummyContent.DummyItem;
 import com.conflux.finflux.util.Logger;
 
@@ -30,6 +33,9 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import retrofit2.adapter.rxjava.HttpException;
 
@@ -47,14 +53,20 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
     private static final String MEETING_FALL_CENTER = "meeting-fall-center";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private ArrayList<CenterWIthMeetingAndCheckedStatus> centerWIthMeetingAndCheckedStatuses;
+    private ArrayList<CenterListHelper> centerListHelpers;
+    private View view;
 
     @Inject
     CollectionSheetPresenter mCollectionSheetPresenter;
+    @Bind(R.id.center_list)
+    RecyclerView recyclerView;
+    @Bind(R.id.btn_download)
+    Button btnDownload;
 
     private Long officeId;
     private Long staffId;
-    private int i=0;
+    private int i = 0;
+    private int mCountSelectedCenters = 0;
     Realm realm;
     private ArrayList<DateString> meetingDates;
     private ArrayList<ExtendedProductionCollectiondata> extendedProductionCollectiondatas;
@@ -63,12 +75,10 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
     public MeetingsFallCenterListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static MeetingsFallCenterListFragment newInstance(int columnCount, ArrayList<DateString> meetingdates) {
         MeetingsFallCenterListFragment fragment = new MeetingsFallCenterListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(MEETING_DATES,meetingdates);
+        args.putParcelableArrayList(MEETING_DATES, meetingdates);
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
@@ -82,73 +92,71 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             meetingDates = getArguments().getParcelableArrayList(MEETING_DATES);
-            centerWIthMeetingAndCheckedStatuses = getArguments().getParcelableArrayList(MEETING_FALL_CENTER);
+            centerListHelpers = getArguments().getParcelableArrayList(MEETING_FALL_CENTER);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meetingsfallcenterlist_list, container, false);
+        view = inflater.inflate(R.layout.fragment_meetingsfallcenterlist_list, container, false);
         mCollectionSheetPresenter.attachView(this);
+        ButterKnife.bind(this, view);
         getProductionCollectionSheetData();
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            if(centerWIthMeetingAndCheckedStatuses == null){
-                centerWIthMeetingAndCheckedStatuses = new ArrayList<CenterWIthMeetingAndCheckedStatus>();
-            }
-            meetingsFallCenterListRecyclerViewAdapter = new MeetingsFallCenterListRecyclerViewAdapter(getActivity(),centerWIthMeetingAndCheckedStatuses, mListener);
-            recyclerView.setAdapter(meetingsFallCenterListRecyclerViewAdapter);
-            meetingsFallCenterListRecyclerViewAdapter.setOnItemClickListener(myClickListener);
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        if (centerListHelpers == null) {
+            centerListHelpers = new ArrayList<CenterListHelper>();
+        }
+        meetingsFallCenterListRecyclerViewAdapter = new MeetingsFallCenterListRecyclerViewAdapter(getActivity(), centerListHelpers, mListener);
+        recyclerView.setAdapter(meetingsFallCenterListRecyclerViewAdapter);
+        meetingsFallCenterListRecyclerViewAdapter.setOnItemClickListener(myClickListener);
         return view;
     }
 
 
-   MeetingsFallCenterListRecyclerViewAdapter.MyClickListener myClickListener = new MeetingsFallCenterListRecyclerViewAdapter.MyClickListener() {
-       @Override
-       public void onItemClick(int position, View v) {
-           Logger.d(TAG,"The clicked item is "+centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus);
-           if(centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus){
-               centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus = false;
-           }else {
-               centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus = true;
-           }
-           meetingsFallCenterListRecyclerViewAdapter.notifyDataSetChanged();
-       }
-   };
+    MeetingsFallCenterListRecyclerViewAdapter.MyClickListener myClickListener = new MeetingsFallCenterListRecyclerViewAdapter.MyClickListener() {
+        @Override
+        public void onItemClick(int position, View v) {
+            Logger.d(TAG, "The clicked item is " + centerListHelpers.get(position).checkedStatus);
+            if (centerListHelpers.get(position).checkedStatus) {
+                centerListHelpers.get(position).checkedStatus = false;
+            } else {
+                centerListHelpers.get(position).checkedStatus = true;
+            }
+            meetingsFallCenterListRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    };
 
-    private void getProductionCollectionSheetData(){
+    private void getProductionCollectionSheetData() {
         basicCenterData();
         preparePayload();
     }
 
-    public void preparePayload(){
-        Payload payload=new Payload();
-        if (staffId!=0) {
+    public void preparePayload() {
+        Payload payload = new Payload();
+        if (staffId != 0) {
             try {
-                payload.setDateFormat(CollectionSheetConstants.dateFormat);
+                payload.setDateFormat(CollectionSheetConstants.DATE_FORMAT);
                 payload.setLocale(CollectionSheetConstants.EN);
                 payload.setMeetingDate(meetingDates.get(i).getDate());
                 payload.setOfficeId(officeId);
                 payload.setStaffId(staffId);
                 mCollectionSheetPresenter.loadProductiveCollectionSheet(payload);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-                Logger.d(TAG,"staff is not assigned to user");
+                Logger.d(TAG, "staff is not assigned to user");
             }
         }
     }
 
-    public void basicCenterData(){
+    public void basicCenterData() {
         LoginUser user = realm.where(LoginUser.class).findFirst();
-        officeId=user.getOfficeId();
+        officeId = user.getOfficeId();
         staffId = user.getStaffid();
     }
 
@@ -180,37 +188,73 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
 
     @Override
     public void showProductiveCollectionSheet(ArrayList<ProductiveCollectionData> productiveCollectionData) {
-        Logger.d(TAG,"fetched the center "+productiveCollectionData);
-        intialiseTheExtendeProductionCollectiondata(i,productiveCollectionData);
+        Logger.d(TAG, "fetched the center " + productiveCollectionData);
+        intialiseTheExtendeProductionCollectiondata(i, productiveCollectionData);
         checkForMeetings();
     }
 
-    private void intialiseTheExtendeProductionCollectiondata(final int i,final ArrayList<ProductiveCollectionData> productiveCollectionDatas){
-        if(extendedProductionCollectiondatas == null){
-            extendedProductionCollectiondatas = new ArrayList<ExtendedProductionCollectiondata>();
-        }
-        if(centerWIthMeetingAndCheckedStatuses == null){
-            centerWIthMeetingAndCheckedStatuses = new ArrayList<CenterWIthMeetingAndCheckedStatus>();
-        }
-        for(ProductiveCollectionData productiveCollectionData : productiveCollectionDatas) {
-            ExtendedProductionCollectiondata extendedProductionCollectiondata = new ExtendedProductionCollectiondata(productiveCollectionData, meetingDates.get(i).getDate(), productiveCollectionData.getMeetingFallCenters().size());
-            extendedProductionCollectiondatas.add(extendedProductionCollectiondata);
-            for (MeetingFallCenter meetingFallCenter : productiveCollectionData.getMeetingFallCenters()) {
-                CenterWIthMeetingAndCheckedStatus centerWIthMeetingAndCheckedStatus = new CenterWIthMeetingAndCheckedStatus();
-                centerWIthMeetingAndCheckedStatus.setDate(meetingDates.get(i).getDate());
-                centerWIthMeetingAndCheckedStatus.setMeetingFallCenter(meetingFallCenter);
-                centerWIthMeetingAndCheckedStatuses.add(centerWIthMeetingAndCheckedStatus);
-                meetingsFallCenterListRecyclerViewAdapter.notifyDataSetChanged();
-            }
+    @OnClick(R.id.btn_download)
+    public void onClickDownload(View view) {
+        Logger.d(TAG, "Download ");
+        btnDownload.setClickable(false);
+        mCountSelectedCenters = 0;
+        downloadSelectedCenters();
+    }
+
+    private void downloadSelectedCenters() {
+        if (centerListHelpers.size() > 0) {
+            downloadNextCenter();
         }
     }
 
-    //if there are items in the meetingDates increment the value of i and call api
-    private void checkForMeetings(){
-        ++i;
-        Logger.d(TAG,"the value of i "+i+"size of array "+meetingDates.size());
+    private void downloadNextCenter() {
+        if (mCountSelectedCenters < centerListHelpers.size()) {
+            if(centerListHelpers.get(mCountSelectedCenters).checkedStatus) {
+                downloadCenterwithId(centerListHelpers.get(mCountSelectedCenters),
+                        centerListHelpers.get(mCountSelectedCenters).getMeetingFallCenter().getId());
+            }else {
+                ++mCountSelectedCenters;
+                downloadNextCenter();
+            }
+        }else {
+            btnDownload.setClickable(true);
+        }
+    }
 
-        if(i<meetingDates.size()){
+    private void downloadCenterwithId(final CenterListHelper centerListHelper, final Long centerId) {
+        Payload payload = new GenerateCollectionSheetPayloadAssembler(centerListHelper.getMeetingFallCenter(),
+                centerListHelper.getDate()).assemblePayload();
+        mCollectionSheetPresenter.loadCollectionsForGroup(centerId,payload);
+
+    }
+
+    @Override
+    public void showCenterCollectionSheet(CollectionSheetData collectionSheetData) {
+        Logger.d(TAG,"successful group list "+collectionSheetData);
+        ++mCountSelectedCenters;
+        downloadNextCenter();
+    }
+
+    private void intialiseTheExtendeProductionCollectiondata(final int i, final ArrayList<ProductiveCollectionData> productiveCollectionDatas) {
+        if (extendedProductionCollectiondatas == null) {
+            extendedProductionCollectiondatas = new ArrayList<ExtendedProductionCollectiondata>();
+        }
+        if (centerListHelpers == null) {
+            centerListHelpers = new ArrayList<CenterListHelper>();
+        }
+        if (productiveCollectionDatas.size() > 0) {
+            ProductionCollectionSheedDataAssembler productionCollectionSheedDataAssembler = new ProductionCollectionSheedDataAssembler(getActivity(), productiveCollectionDatas, meetingDates.get(i).getDate());
+            extendedProductionCollectiondatas.addAll(productionCollectionSheedDataAssembler.assembleProductionCollectionSheetData());
+            centerListHelpers.addAll(productionCollectionSheedDataAssembler.assembleCenterListHelperData(realm));
+            meetingsFallCenterListRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void checkForMeetings() {
+        ++i;
+        Logger.d(TAG, "the value of i " + i + "size of array " + meetingDates.size());
+
+        if (i < meetingDates.size()) {
             getProductionCollectionSheetData();
         }
     }

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.conflux.finflux.R;
+import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.injection.component.ActivityComponent;
 
 public class OfflineManagement extends AppCompatActivity {
@@ -16,6 +17,7 @@ public class OfflineManagement extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_management);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ApplicationAnalytics.sendEventLogs("OfflineManagement","Initialised");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

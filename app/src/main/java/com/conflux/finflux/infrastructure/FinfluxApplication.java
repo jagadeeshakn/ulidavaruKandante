@@ -40,6 +40,10 @@ public class FinfluxApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
         Fabric.with(this, new Crashlytics());
         instance = this;
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).name(getString(R.string.db_name)+".realm").build();

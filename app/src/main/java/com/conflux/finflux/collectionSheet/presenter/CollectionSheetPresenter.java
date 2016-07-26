@@ -10,6 +10,7 @@ import com.conflux.finflux.util.Logger;
 import com.conflux.finflux.util.PrefManager;
 
 import java.util.ArrayList;
+
 import com.conflux.finflux.base.BasePresenter;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.infrastructure.api.manager.Data;
@@ -36,14 +37,14 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
         mDataManager = dataManager;
     }
 
-    public void loadProductiveCollectionSheet(Payload payload){
+    public void loadProductiveCollectionSheet(Payload payload) {
         checkViewAttached();
-        String instanceUrl= PrefManager.getInstanceUrl();
-        Logger.d(getClass().getSimpleName(),"The url is "+instanceUrl);
+        String instanceUrl = PrefManager.getInstanceUrl();
+        Logger.d(getClass().getSimpleName(), "The url is " + instanceUrl);
         mDataManager.mBaseApiManager.updateEndPoint(instanceUrl);
         if (mSubscription != null) mSubscription.unsubscribe();
         mCollectionMvpView.showProgressbar(true);
-        mSubscription=mDataManager.getProductiveCollectionSheet(payload)
+        mSubscription = mDataManager.getProductiveCollectionSheet(payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<ArrayList<ProductiveCollectionData>>() {
@@ -56,7 +57,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                     public void onError(Throwable e) {
                         mCollectionMvpView.showProgressbar(false);
                         e.printStackTrace();
-                        if (e instanceof HttpException){
+                        if (e instanceof HttpException) {
                             HttpException response = (HttpException) e;
                             mCollectionMvpView.showFetchingError(response);
                         }
@@ -64,26 +65,26 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
                     @Override
                     public void onNext(ArrayList<ProductiveCollectionData> productiveCollectionDatas) {
-                        Logger.d(getClass().getSimpleName(),"Successful");
+                        Logger.d(getClass().getSimpleName(), "Successful");
                         mCollectionMvpView.showProductiveCollectionSheet(productiveCollectionDatas);
 
                     }
                 });
     }
 
-    public void loadCollectionsForGroup(Long centerId,Payload payload){
+    public void loadCollectionsForGroup(Long centerId, Payload payload) {
         checkViewAttached();
-        String instanceUrl= PrefManager.getInstanceUrl();
+        String instanceUrl = PrefManager.getInstanceUrl();
         mDataManager.mBaseApiManager.updateEndPoint(instanceUrl);
         if (mSubscription != null) mSubscription.unsubscribe();
         mCollectionMvpView.showProgressbar(true);
-        mSubscription=mDataManager.getCenterCollectionSheet(centerId,payload)
+        mSubscription = mDataManager.getCenterCollectionSheet(centerId, payload)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CollectionSheetData>() {
                     @Override
                     public void onCompleted() {
-                    mCollectionMvpView.showProgressbar(false);
+                        mCollectionMvpView.showProgressbar(false);
                     }
 
                     @Override
@@ -91,7 +92,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
                         mCollectionMvpView.showProgressbar(false);
                         e.printStackTrace();
-                        if (e instanceof HttpException){
+                        if (e instanceof HttpException) {
                             HttpException response = (HttpException) e;
                             mCollectionMvpView.showFetchingError(response);
                         }
@@ -99,7 +100,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
                     @Override
                     public void onNext(CollectionSheetData collectionSheetData) {
-                        Logger.d(getClass().getSimpleName(),"Successful");
+                        Logger.d(getClass().getSimpleName(), "Successful");
                         mCollectionMvpView.showCenterCollectionSheet(collectionSheetData);
                     }
                 });
@@ -109,7 +110,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
     @Override
     public void attachView(CollectionSheetMvpView mvpView) {
         super.attachView(mvpView);
-       this.mCollectionMvpView = mvpView;
+        this.mCollectionMvpView = mvpView;
     }
 
     @Override

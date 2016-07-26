@@ -4,6 +4,7 @@
     <color name="blue">#0099cc</color>
     <color name="light_blue">#33b5e5</color>
     <color name="green">#57ae09</color>
+    <color name="layed.reen">#8f67cc0d</color>
     <color name="primary_dark">#E12929</color>
     <color name="primary_darker">#CC1D1D</color>
     <color name="accent">#fcfcfc</color>
@@ -25,5 +26,6 @@
     <color name="orange">#ff6f0f</color>
     <color name="finflux_theme_color">#01AAEC</color>
     <color name="red_dark">#ffcc0000</color>
+    <color name="layed.red">#7fff0101</color>
 
 </resources>

@@ -8,10 +8,32 @@ import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
 /**
  * Created by Praveen J U on 7/17/2016.
  */
-public class CenterWIthMeetingAndCheckedStatus implements Parcelable {
+public class CenterListHelper implements Parcelable {
     private String Date;
     private MeetingFallCenter meetingFallCenter;
+    private boolean canDownload;
+    private String reason;
     public boolean checkedStatus = false;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+
+
+    public boolean isCanDownload() {
+        return canDownload;
+    }
+
+    public void setCanDownload(boolean canDownload) {
+        this.canDownload = canDownload;
+    }
+
+
 
     public String getDate() {
         return Date;
@@ -29,10 +51,10 @@ public class CenterWIthMeetingAndCheckedStatus implements Parcelable {
         this.meetingFallCenter = meetingFallCenter;
     }
 
-    public static CenterWIthMeetingAndCheckedStatus getInstance(){
-        return new CenterWIthMeetingAndCheckedStatus();
+    public static CenterListHelper getInstance(){
+        return new CenterListHelper();
     }
-    public CenterWIthMeetingAndCheckedStatus() {
+    public CenterListHelper() {
     }
 
     @Override
@@ -47,21 +69,21 @@ public class CenterWIthMeetingAndCheckedStatus implements Parcelable {
         dest.writeByte(this.checkedStatus ? (byte) 1 : (byte) 0);
     }
 
-    protected CenterWIthMeetingAndCheckedStatus(Parcel in) {
+    protected CenterListHelper(Parcel in) {
         this.Date = in.readString();
         this.meetingFallCenter = in.readParcelable(MeetingFallCenter.class.getClassLoader());
         this.checkedStatus = in.readByte() != 0;
     }
 
-    public static final Creator<CenterWIthMeetingAndCheckedStatus> CREATOR = new Creator<CenterWIthMeetingAndCheckedStatus>() {
+    public static final Creator<CenterListHelper> CREATOR = new Creator<CenterListHelper>() {
         @Override
-        public CenterWIthMeetingAndCheckedStatus createFromParcel(Parcel source) {
-            return new CenterWIthMeetingAndCheckedStatus(source);
+        public CenterListHelper createFromParcel(Parcel source) {
+            return new CenterListHelper(source);
         }
 
         @Override
-        public CenterWIthMeetingAndCheckedStatus[] newArray(int size) {
-            return new CenterWIthMeetingAndCheckedStatus[size];
+        public CenterListHelper[] newArray(int size) {
+            return new CenterListHelper[size];
         }
     };
 }

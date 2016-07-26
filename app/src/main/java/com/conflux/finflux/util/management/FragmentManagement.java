@@ -21,7 +21,7 @@ public class FragmentManagement {
                 if (addToBackStack) {
                     transaction.addToBackStack(backStateName);
                 }
-                transaction.commit();
+                transaction.commitAllowingStateLoss();
             }
         }
 }

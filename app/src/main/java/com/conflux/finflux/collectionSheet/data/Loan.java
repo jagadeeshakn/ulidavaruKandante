@@ -7,7 +7,8 @@ import android.os.Parcelable;
  * Created by jagadeeshakn on 7/11/2016.
  */
 public class Loan implements Parcelable {
-
+    private Long Id;
+    private String name;
     private Double disbursementAmount;
     private Double interestDue;
     private Double interestPaid;

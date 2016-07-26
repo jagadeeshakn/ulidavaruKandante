@@ -48,6 +48,12 @@ public class FetchCollection extends FinBaseActivity implements MeetingsFallCent
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getInstance().unregister(this);
+    }
+
+    @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
     }

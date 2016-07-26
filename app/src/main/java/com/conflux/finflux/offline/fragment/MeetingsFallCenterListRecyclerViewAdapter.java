@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
-import com.conflux.finflux.offline.data.CenterWIthMeetingAndCheckedStatus;
+import com.conflux.finflux.offline.data.CenterListHelper;
 import com.conflux.finflux.offline.fragment.MeetingsFallCenterListFragment.OnListFragmentInteractionListener;
 import com.conflux.finflux.offline.fragment.dummy.DummyContent.DummyItem;
 import com.conflux.finflux.util.Logger;
@@ -19,7 +19,6 @@ import com.conflux.finflux.util.Logger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,9 +35,9 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
     private static MyClickListener myClickListener;
     private final SimpleDateFormat formatDay = new SimpleDateFormat("EEEE");
     private final SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-    private final ArrayList<CenterWIthMeetingAndCheckedStatus> centerWIthMeetingAndCheckedStatuses;
+    private final ArrayList<CenterListHelper> centerWIthMeetingAndCheckedStatuses;
     private final Context context;
-    public MeetingsFallCenterListRecyclerViewAdapter(Context context,ArrayList<CenterWIthMeetingAndCheckedStatus> items, OnListFragmentInteractionListener listener) {
+    public MeetingsFallCenterListRecyclerViewAdapter(Context context, ArrayList<CenterListHelper> items, OnListFragmentInteractionListener listener) {
         this.context = context;
         centerWIthMeetingAndCheckedStatuses = items;
         mListener = listener;
@@ -54,6 +53,7 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         String date = centerWIthMeetingAndCheckedStatuses.get(position).getDate();
+        CenterListHelper centerListHelper = centerWIthMeetingAndCheckedStatuses.get(position);
         Logger.d(TAG,"the date is "+date);
         try {
             Date date1 = formatDate.parse(date);
@@ -65,17 +65,17 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
         }
         MeetingFallCenter meetingFallCenter = centerWIthMeetingAndCheckedStatuses.get(position).getMeetingFallCenter();
         holder.textViewCentername.setText(meetingFallCenter.getName());
-        holder.textViewTotalDue.setText(String.valueOf(meetingFallCenter.getTotaldue()));
-        holder.textViewTotalCollected.setText(String.valueOf(meetingFallCenter.getTotalCollected()));
-        if(meetingFallCenter.getTotalCollected() != 0){
-            holder.textViewStatus.setText(context.getText(R.string.collection_status_completed));
+        holder.textViewTotalDue.setText(context.getString(R.string.label_center_total_due)+" : "+String.valueOf(meetingFallCenter.getTotaldue()));
+        holder.textViewTotalCollected.setText(context.getString(R.string.label_center_total_collected)+" : "+String.valueOf(meetingFallCenter.getTotalCollected()));
+        holder.textViewStatus.setText(centerWIthMeetingAndCheckedStatuses.get(position).getReason());
+        if(centerListHelper.isCanDownload()){
             holder.cardView.setClickable(false);
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.red_dark));
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layed_red));
             holder.checkBox.setChecked(false);
-            centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus = false;
+            centerListHelper.checkedStatus = false;
         }else {
             holder.cardView.setClickable(true);
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.green));
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layed_reen));
             holder.textViewStatus.setText(context.getString(R.string.collection_status_can_download));
         }
 
@@ -84,21 +84,6 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
         }else {
             holder.checkBox.setChecked(false);
         }
-
-       /* holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });*/
     }
 
     @Override
@@ -127,23 +112,15 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
 
 
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
         public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this,view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
             view.setOnClickListener(this);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
 
         @Override
         public void onClick(View view) {

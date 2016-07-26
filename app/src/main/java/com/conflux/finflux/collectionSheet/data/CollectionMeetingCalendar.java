@@ -16,7 +16,7 @@ public class CollectionMeetingCalendar implements Parcelable {
 
     Long calendarInstanceId;
     long calendarId;
-    int entityId;
+    Long entityId;
     Status entityType;
     String title;
     String description;
@@ -75,11 +75,11 @@ public class CollectionMeetingCalendar implements Parcelable {
         this.calendarInstanceId = calendarInstanceId;
     }
 
-    public int getEntityId() {
+    public Long getEntityId() {
         return entityId;
     }
 
-    public void setEntityId(int entityId) {
+    public void setEntityId(Long entityId) {
         this.entityId = entityId;
     }
 
@@ -148,7 +148,7 @@ public class CollectionMeetingCalendar implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.calendarInstanceId);
         dest.writeLong(this.calendarId);
-        dest.writeInt(this.entityId);
+        dest.writeLong(this.entityId);
         dest.writeParcelable(this.entityType, 0);
         dest.writeString(this.title);
         dest.writeString(this.description);
@@ -163,7 +163,7 @@ public class CollectionMeetingCalendar implements Parcelable {
     protected CollectionMeetingCalendar(Parcel in) {
         this.calendarInstanceId = in.readLong();
         this.calendarId = in.readLong();
-        this.entityId = in.readInt();
+        this.entityId = in.readLong();
         this.entityType = in.readParcelable(Status.class.getClassLoader());
         this.title = in.readString();
         this.description = in.readString();

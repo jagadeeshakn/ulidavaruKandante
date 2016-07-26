@@ -17,6 +17,8 @@ import android.view.View;
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.activity.CollectionSheetActivity;
 import com.conflux.finflux.infrastructure.FinfluxApplication;
+import com.conflux.finflux.infrastructure.analytics.data.FabricIoConstants;
+import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.injection.component.ActivityComponent;
 import com.conflux.finflux.injection.component.DaggerActivityComponent;
 import com.conflux.finflux.injection.module.ActivityModule;
@@ -148,13 +150,17 @@ public class FinBaseActivity extends AppCompatActivity implements BaseActivityCa
                 startNavigationClickActivity(intent);
         }
         mDrawerLayout.closeDrawer(Gravity.LEFT);
-        switch (item.getItemId()){
-            case R.id.item_settings : startSettingsActivity();
+        switch (item.getItemId()) {
+            case R.id.item_settings:
+                startSettingsActivity();
                 break;
-            case R.id.item_logout : itinializeLogout();
+            case R.id.item_logout:
+                itinializeLogout();
                 mNavigationView.setCheckedItem(R.id.item_logout);
                 break;
-            case R.id.item_offline : startOffilneActivity();
+            case R.id.item_offline:
+                ApplicationAnalytics.sendEventLogs(FabricIoConstants.DASHBOARD, "Offline");
+                startOffilneActivity();
                 break;
         }
         return true;
@@ -171,6 +177,7 @@ public class FinBaseActivity extends AppCompatActivity implements BaseActivityCa
     }
 
     private void itinializeLogout(){
+        ApplicationAnalytics.sendEventLogs(FabricIoConstants.LOGOUT, "Offline");
         startActivity(new Intent(this, LogoutActivity.class));
     }
 

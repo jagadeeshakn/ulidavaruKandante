@@ -51,6 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:textColor="@color/blue"
                         android:singleLine="true"
                         android:nextFocusDown="@+id/editText_url"
                         android:hint="@string/organization_name"/>
@@ -66,6 +67,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:singleLine="true"
+                        android:textColor="@color/blue"
                         android:nextFocusDown="@+id/editText_port_number"
                         android:imeOptions="actionDone"
                         android:hint="@string/url"/>
@@ -81,6 +83,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:singleLine="true"
+                        android:textColor="@color/blue"
                         android:nextFocusDown="@+id/editText_tenant"
                         android:inputType="number"
                         android:hint="@string/port"/>
@@ -95,6 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:textColor="@color/blue"
                         android:singleLine="true"
                         android:imeOptions="actionDone"
                         android:hint="@string/tenant"/>

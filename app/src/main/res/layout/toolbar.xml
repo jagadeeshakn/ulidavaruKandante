@@ -6,12 +6,4 @@
     android:theme="@style/Toolbar.Common"
     app:popupTheme="@style/AppToolbarPopup">
 
-    <!--<RelativeLayout style="@style/RelativeLayout.Base">-->
-
-    <!--<com.mifos.mifosxdroid.views.FontTextView-->
-    <!--android:id="@+id/title"-->
-    <!--style="@style/TextView.Toolbar"-->
-    <!--app:typeface="roboto_medium" />-->
-
-    <!--</RelativeLayout>-->
 </android.support.v7.widget.Toolbar>

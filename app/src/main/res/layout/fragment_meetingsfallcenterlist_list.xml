@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name="com.conflux.finflux.offline.fragment.MeetingsFallCenterListFragment"
+    android:layout_height="match_parent"
+    tools:context="com.conflux.finflux.offline.fragment.MeetingsFallCenterListFragment"
+    android:layout_width="match_parent">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:id="@+id/btn_download"
+        style="@style/OfflineLable"
+        android:layout_alignParentBottom="true"
+        android:text="@string/button.label.download"/>
+<android.support.v7.widget.RecyclerView
+    android:layout_above="@id/btn_download"
+    android:id="@+id/center_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    app:layoutManager="LinearLayoutManager"
+    tools:listitem="@layout/fragment_meetingsfallcenterlist" />
+
+</RelativeLayout>

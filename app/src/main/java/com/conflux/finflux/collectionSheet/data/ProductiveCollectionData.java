@@ -17,6 +17,12 @@ public class ProductiveCollectionData implements Parcelable{
 
     private List<MeetingFallCenter> meetingFallCenters = new ArrayList<MeetingFallCenter>();
 
+    public ProductiveCollectionData(Long staffId, String staffName, List<MeetingFallCenter> meetingFallCenters) {
+        this.staffId = staffId;
+        this.staffName = staffName;
+        this.meetingFallCenters = meetingFallCenters;
+    }
+
     public Long getStaffId() {
         return staffId;
     }
@@ -51,6 +57,9 @@ public class ProductiveCollectionData implements Parcelable{
     }
 
 
+    public ProductiveCollectionData() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -60,10 +69,7 @@ public class ProductiveCollectionData implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.staffId);
         dest.writeString(this.staffName);
-        dest.writeTypedList(meetingFallCenters);
-    }
-
-    public ProductiveCollectionData() {
+        dest.writeTypedList(this.meetingFallCenters);
     }
 
     protected ProductiveCollectionData(Parcel in) {
@@ -73,10 +79,12 @@ public class ProductiveCollectionData implements Parcelable{
     }
 
     public static final Creator<ProductiveCollectionData> CREATOR = new Creator<ProductiveCollectionData>() {
+        @Override
         public ProductiveCollectionData createFromParcel(Parcel source) {
             return new ProductiveCollectionData(source);
         }
 
+        @Override
         public ProductiveCollectionData[] newArray(int size) {
             return new ProductiveCollectionData[size];
         }

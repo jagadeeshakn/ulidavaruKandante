@@ -23,7 +23,7 @@ public class ApplicationAnalytics {
 
     public static void sendLoginStatus(boolean status,String username,String message){
         Answers.getInstance().logLogin(new LoginEvent()
-                .putMethod("Digits")
+                .putMethod("Login")
                 .putSuccess(status)
                 .putCustomAttribute(FabricIoConstants.USERNAME, username)
                 .putCustomAttribute(FabricIoConstants.MESSAGE, message)

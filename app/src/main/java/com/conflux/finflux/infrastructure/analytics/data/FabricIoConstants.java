@@ -17,4 +17,6 @@ public class FabricIoConstants {
     public static final String ORGANIZATION_NAME = "Organization Name";
     public static final String USERNAME = "Username";
     public static final String MESSAGE ="Message";
+    public static final String DASHBOARD = "Dashboard";
+    public static final String LOGOUT = "Logout";
 }

@@ -1,8 +1,5 @@
 package com.conflux.finflux.db.collectionsheet;
 
-import com.conflux.finflux.collectionSheet.data.Status;
-
-import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 

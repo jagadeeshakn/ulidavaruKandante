@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,11 +18,11 @@ public class CollectionSheetDataForAdapter implements Parcelable {
     private String entityName;
     private Long parentId;
     private HashMap<Long,Double> editLoans;
-    private AttendanceType editAttendanceType;
+    private CodeValue editAttendanceType;
     private Double dueAmount;
     private Double collectedAmount;
-    private ArrayList<Loan> loans;
-    private AttendanceType attendanceType;
+    private List<Loan> loans = new ArrayList<>();
+    private CodeValue attendanceType;
 
 
     public Long getEntityId() {
@@ -64,11 +65,11 @@ public class CollectionSheetDataForAdapter implements Parcelable {
         this.editLoans = editLoans;
     }
 
-    public AttendanceType getEditAttendanceType() {
+    public CodeValue getEditAttendanceType() {
         return editAttendanceType;
     }
 
-    public void setEditAttendanceType(AttendanceType editAttendanceType) {
+    public void setEditAttendanceType(CodeValue editAttendanceType) {
         this.editAttendanceType = editAttendanceType;
     }
 
@@ -88,19 +89,19 @@ public class CollectionSheetDataForAdapter implements Parcelable {
         this.collectedAmount = collectedAmount;
     }
 
-    public ArrayList<Loan> getLoans() {
+    public List<Loan> getLoans() {
         return loans;
     }
 
-    public void setLoans(ArrayList<Loan> loans) {
+    public void setLoans(List<Loan> loans) {
         this.loans = loans;
     }
 
-    public AttendanceType getAttendanceType() {
+    public CodeValue getAttendanceType() {
         return attendanceType;
     }
 
-    public void setAttendanceType(AttendanceType attendanceType) {
+    public void setAttendanceType(CodeValue attendanceType) {
         this.attendanceType = attendanceType;
     }
 
@@ -155,11 +156,11 @@ public class CollectionSheetDataForAdapter implements Parcelable {
         this.entityType = in.readString();
         this.entityName = in.readString();
         this.parentId = (Long) in.readValue(Long.class.getClassLoader());
-        this.editAttendanceType = in.readParcelable(AttendanceType.class.getClassLoader());
+        this.editAttendanceType = in.readParcelable(CodeValue.class.getClassLoader());
         this.dueAmount = (Double) in.readValue(Double.class.getClassLoader());
         this.collectedAmount = (Double) in.readValue(Double.class.getClassLoader());
         this.loans = in.createTypedArrayList(Loan.CREATOR);
-        this.attendanceType = in.readParcelable(AttendanceType.class.getClassLoader());
+        this.attendanceType = in.readParcelable(CodeValue.class.getClassLoader());
         if(in.readByte()==1) {
             editLoans = new HashMap<Long,Double>();
             int size = in.readInt();

@@ -25,7 +25,7 @@ public class MeetingFallCenter implements Parcelable {
 
     private String hierarchy;
 
-    private Status status;
+    private CodeValue status;
 
     private Boolean active;
 
@@ -97,11 +97,11 @@ public class MeetingFallCenter implements Parcelable {
         this.hierarchy = hierarchy;
     }
 
-    public Status getStatus() {
+    public CodeValue getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(CodeValue status) {
         this.status = status;
     }
 
@@ -218,7 +218,7 @@ public class MeetingFallCenter implements Parcelable {
         this.staffId = (Long) in.readValue(Long.class.getClassLoader());
         this.staffName = in.readString();
         this.hierarchy = in.readString();
-        this.status = in.readParcelable(Status.class.getClassLoader());
+        this.status = in.readParcelable(CodeValue.class.getClassLoader());
         this.active = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.isSynced = in.readInt();
         this.activationDate = new ArrayList<Integer>();

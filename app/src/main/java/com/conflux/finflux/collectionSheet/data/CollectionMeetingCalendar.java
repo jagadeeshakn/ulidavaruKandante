@@ -17,7 +17,7 @@ public class CollectionMeetingCalendar implements Parcelable {
     Long calendarInstanceId;
     long calendarId;
     Long entityId;
-    Status entityType;
+    CodeValue entityType;
     String title;
     String description;
     String location;
@@ -83,11 +83,11 @@ public class CollectionMeetingCalendar implements Parcelable {
         this.entityId = entityId;
     }
 
-    public Status getEntityType() {
+    public CodeValue getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(Status entityType) {
+    public void setEntityType(CodeValue entityType) {
         this.entityType = entityType;
     }
 
@@ -164,7 +164,7 @@ public class CollectionMeetingCalendar implements Parcelable {
         this.calendarInstanceId = in.readLong();
         this.calendarId = in.readLong();
         this.entityId = in.readLong();
-        this.entityType = in.readParcelable(Status.class.getClassLoader());
+        this.entityType = in.readParcelable(CodeValue.class.getClassLoader());
         this.title = in.readString();
         this.description = in.readString();
         this.location = in.readString();

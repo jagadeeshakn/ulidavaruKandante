@@ -2,6 +2,7 @@ package com.conflux.finflux.infrastructure.api.manager;
 
 
 import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
+import com.conflux.finflux.collectionSheet.data.CollectionSheetPayload;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
 import com.conflux.finflux.login.data.User;
@@ -53,6 +54,11 @@ public class Data {
 
     public Observable<CollectionSheetData>getCenterCollectionSheet(Long centerId,Payload payload){
         Logger.d(getClass().getSimpleName(), "center collection sheet api");
-        return mBaseApiManager.getCollectionApi().getCollectionSheet(centerId,payload);
+        return mBaseApiManager.getCollectionApi().getCollectionSheet(centerId, payload);
+    }
+
+    public Observable<SaveResponse> saveCollectionSheetAsync(Long centerId, CollectionSheetPayload payload) {
+        Logger.d(getClass().getSimpleName(), "save center collection sheet api");
+        return mBaseApiManager.getCollectionApi().saveCollectionSheet(centerId, payload);
     }
 }

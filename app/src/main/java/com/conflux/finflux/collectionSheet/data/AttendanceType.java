@@ -68,7 +68,9 @@ public class AttendanceType implements Parcelable {
         dest.writeParcelable(this.client, 0);
     }
 
-    public AttendanceType() {
+    public AttendanceType(Long clientId,Long attendanceType) {
+        this.clientId = clientId;
+        this.attendanceTypeId = attendanceType;
     }
 
     protected AttendanceType(Parcel in) {

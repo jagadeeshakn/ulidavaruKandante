@@ -32,7 +32,7 @@ public class ApplicationAnalytics {
 
     public static void sendEventLogs(String eventName,String message){
         String organizationName=PrefManager.getOrganization();
-        Answers.getInstance().logCustom(new CustomEvent(organizationName+"_"+eventName)
+        Answers.getInstance().logCustom(new CustomEvent(organizationName)
                 .putCustomAttribute(organizationName+"_"+eventName,message));
     }
 }

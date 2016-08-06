@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -93,5 +94,20 @@ public class FinBaseFragment extends Fragment {
         mProgressBarHandler.hide();
     }
 
+    public void replaceFragment(Fragment fragment, boolean addToBackStack, int containerId) {
+        String backStateName = fragment.getClass().getName();
+        boolean fragmentPopped = getActivity().getSupportFragmentManager().popBackStackImmediate(backStateName,
+                0);
+
+        if (!fragmentPopped && getActivity().getSupportFragmentManager().findFragmentByTag(backStateName) ==
+                null) {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(containerId, fragment, backStateName);
+            if (addToBackStack) {
+                transaction.addToBackStack(backStateName);
+            }
+            transaction.commit();
+        }
+    }
 
 }

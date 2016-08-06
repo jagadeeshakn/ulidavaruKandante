@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.conflux.finflux.collectionSheet.data.Client;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetConstants;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetDataForAdapter;
-import com.conflux.finflux.collectionSheet.data.FinfluxGroup;
+import com.conflux.finflux.collectionSheet.data.Group;
 import com.conflux.finflux.collectionSheet.data.Loan;
 import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
 import com.conflux.finflux.collectionSheet.data.Payload;
@@ -30,21 +29,16 @@ import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.core.FinBaseActivity;
 import com.conflux.finflux.core.FinBaseFragment;
 import com.conflux.finflux.db.LoginUser;
-import com.conflux.finflux.login.data.User;
+import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
 import com.conflux.finflux.util.DateHelper;
 import com.conflux.finflux.util.ErrorDialogFragment;
 import com.conflux.finflux.util.FragmentConstants;
 import com.conflux.finflux.util.Logger;
 import com.conflux.finflux.util.MFDatePicker;
-import com.conflux.finflux.util.PrefManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import com.conflux.finflux.R;
-import com.conflux.finflux.core.FinBaseActivity;
-import com.conflux.finflux.core.FinBaseFragment;
 
 import javax.inject.Inject;
 
@@ -85,6 +79,8 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
     private String dateString;
     private Long staffId;
     private Long officeId;
+    private String centerName;
+    private Long calendarId;
     private String en;
     private String code;
 
@@ -96,10 +92,15 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
         return centerList;
     }
 
+    public CollectionSheetCenterList() {
+        //Required public empty constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((FinBaseActivity) getActivity()).getActivityComponent().inject(this);
+        ApplicationAnalytics.sendEventLogs(TAG, CollectionSheetConstants.PRODUCTIVE_COLLECTION_SHEET);
         setRetainInstance(true);
     }
 
@@ -134,11 +135,15 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
     }
 
     public void basicCenterData() {
-        Realm realm = Realm.getDefaultInstance();
-        LoginUser user = realm.where(LoginUser.class).findFirst();
-        officeId = user.getOfficeId();
-        staffId = user.getStaffid();
-        setProductiveCollectionPayload(staffId);
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            LoginUser user = realm.where(LoginUser.class).findFirst();
+            officeId = user.getOfficeId();
+            staffId = user.getStaffid();
+            setProductiveCollectionPayload(staffId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void inflateMeetingDate() {
@@ -218,15 +223,17 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
             ((CenterCollectionListAdapter) collectionListAdapter).setOnItemClickListener(new CenterCollectionListAdapter.MyClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
-                    int mPosition = position;
                     try {
-                        if (mPosition != -1) {
+                        if (position != -1) {
                             Payload payload = new Payload();
+                            long centerId = meetingFallCenterList.get(position).getId();
+                            centerName = meetingFallCenterList.get(position).getName();
+                            calendarId = meetingFallCenterList.get(position).getCollectionMeetingCalendar().getCalendarInstanceId();
                             payload.setDateFormat(CollectionSheetConstants.DATE_FORMAT);
                             payload.setLocale(CollectionSheetConstants.EN);
                             payload.setTransactionDate(dateString);
-                            payload.setCalendarId(meetingFallCenterList.get(position).getCollectionMeetingCalendar().getCalendarInstanceId());
-                            long centerId = meetingFallCenterList.get(position).getId();
+                            payload.setCalendarId(calendarId);
+
                             mCollectionSheetPresenter.loadCollectionsForGroup(centerId, payload);
 
                         }
@@ -275,11 +282,12 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
                 }
             }
         }
+        replaceFragment(CollectionSheetGroupList.newInstance(collectionSheetDataForAdapters, collectionSheetData, dateString, centerName,calendarId), false, R.id.container);
     }
 
     private ArrayList<CollectionSheetDataForAdapter> getGroupDeatils(CollectionSheetData collectionSheetData) {
         ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapter = new ArrayList<CollectionSheetDataForAdapter>();
-        for (FinfluxGroup group : collectionSheetData.getGroups()) {
+        for (Group group : collectionSheetData.getGroups()) {
             double totalDue = 0;
             double totalCollected = 0;
             for (Client client : group.getClients()) {

@@ -2,18 +2,15 @@ package com.conflux.finflux.collectionSheet.presenter;
 
 import com.conflux.finflux.base.BasePresenter;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
+import com.conflux.finflux.collectionSheet.data.CollectionSheetPayload;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.infrastructure.api.manager.Data;
+import com.conflux.finflux.infrastructure.api.manager.SaveResponse;
 import com.conflux.finflux.util.Logger;
 import com.conflux.finflux.util.PrefManager;
-
 import java.util.ArrayList;
-
-import com.conflux.finflux.base.BasePresenter;
-import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
-import com.conflux.finflux.infrastructure.api.manager.Data;
 
 import javax.inject.Inject;
 
@@ -105,6 +102,36 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                     }
                 });
 
+    }
+
+    public void saveCollectionSheet(Long  centerId, CollectionSheetPayload payload) {
+        checkViewAttached();
+        String instanceUrl = PrefManager.getInstanceUrl();
+        mDataManager.mBaseApiManager.updateEndPoint(instanceUrl);
+        if (mSubscription != null) mSubscription.unsubscribe();
+        mCollectionMvpView.showProgressbar(true);
+        mSubscription = mDataManager.saveCollectionSheetAsync(centerId, payload)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<SaveResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    mCollectionMvpView.showProgressbar(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCollectionMvpView.showProgressbar(false);
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException) e;
+                            getMvpView().showFetchingError(response);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(SaveResponse saveResponse) {
+                    }
+                });
     }
 
     @Override

@@ -46,6 +46,14 @@
     <string name="close_drawer">Close Drawer</string>
     <string name="survey">Survey</string>
     <string name="offline">Offline *</string>
+    <string name="entity_name">Entity Name</string>
+    <string name="attendence">Attendence</string>
+    <string name="client_id">ClientId</string>
+    <string name="meeting_time">Time</string>
+    <string name="meeting_location">Location</string>
+    <string name="client_name">ClientName</string>
+    <string name="product_name">ProductName</string>
+
 
     //logout
     <string name="logout">Logout</string>
@@ -162,8 +170,7 @@
     <string name="collection_due">Due</string>
     <string name="center_meeting">center meeting</string>
     <string name="center_name">Center Name</string>
-    <string name="meeting_time">Time</string>
-    <string name="meeting_location">Location</string>
+    <string name="small_text">Small Text</string>
 
 </resources>
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.conflux.finflux.R;
+import com.conflux.finflux.collectionSheet.data.CollectionSheetConstants;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetDataForAdapter;
 import com.conflux.finflux.util.Logger;
 
@@ -42,20 +43,34 @@ public class GroupCollectionListAdapter extends RecyclerView.Adapter<GroupCollec
 
     }
 
+
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
-
+        Logger.d(getClass().getSimpleName(),"The position is "+position);
         holder.tv_entity_name.setText(collectionSheetDataForAdapterList.get(position).getEntityName());
-        holder.tv_attendence.setText(collectionSheetDataForAdapterList.get(position).getAttendanceType().getValue());
+        if (collectionSheetDataForAdapterList.get(position).getEntityType().equals(CollectionSheetConstants.CLIENT)) {
+            if(position % 2 == 0){
+                holder.center_card_view.setCardBackgroundColor(mcontext.getResources().getColor(R.color.white));
+            }else {
+                holder.center_card_view.setCardBackgroundColor(mcontext.getResources().getColor(R.color.ash_grey));
+            }
+            holder.tv_attendence.setText(collectionSheetDataForAdapterList.get(position).getAttendanceType().getValue());
+        }
+        if(collectionSheetDataForAdapterList.get(position).getEntityType().equals(CollectionSheetConstants.GROUP)) {
+            holder.center_card_view.setCardBackgroundColor(mcontext.getResources().getColor(R.color.calendar_selected_range_bg));
+            holder.tv_attendence.setText("");
+        }
         holder.tv_client_id.setText(String.valueOf(collectionSheetDataForAdapterList.get(position).getEntityId()));
         holder.tv_center_total_due.setText(String.valueOf(collectionSheetDataForAdapterList.get(position).getDueAmount()));
         holder.tv_total_collection.setText(String.valueOf(collectionSheetDataForAdapterList.get(position).getCollectedAmount()));
+
     }
 
     @Override
     public int getItemCount() {
         return collectionSheetDataForAdapterList.size();
     }
+
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View

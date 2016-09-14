@@ -29,6 +29,7 @@ public class Loan implements Parcelable {
     private Double interestPaid;
 
     private Double totalDue;
+    private Double totalCollected;
 
     public Long getLoanId() {
         return loanId;
@@ -132,7 +133,19 @@ public class Loan implements Parcelable {
                 ", interestDue=" + interestDue +
                 ", interestPaid=" + interestPaid +
                 ", totalDue=" + totalDue +
+                ", totalCollected=" + totalCollected +
                 '}';
+    }
+
+    public Double getTotalCollected() {
+        return totalCollected;
+    }
+
+    public void setTotalCollected(Double totalCollected) {
+        this.totalCollected = totalCollected;
+    }
+
+    public Loan() {
     }
 
     @Override
@@ -147,15 +160,13 @@ public class Loan implements Parcelable {
         dest.writeValue(this.accountStatusId);
         dest.writeString(this.productShortName);
         dest.writeValue(this.productId);
-        dest.writeParcelable(this.currency, 0);
+        dest.writeParcelable(this.currency, flags);
         dest.writeValue(this.principalDue);
         dest.writeValue(this.principalPaid);
         dest.writeValue(this.interestDue);
         dest.writeValue(this.interestPaid);
         dest.writeValue(this.totalDue);
-    }
-
-    public Loan() {
+        dest.writeValue(this.totalCollected);
     }
 
     protected Loan(Parcel in) {
@@ -170,13 +181,16 @@ public class Loan implements Parcelable {
         this.interestDue = (Double) in.readValue(Double.class.getClassLoader());
         this.interestPaid = (Double) in.readValue(Double.class.getClassLoader());
         this.totalDue = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalCollected = (Double) in.readValue(Double.class.getClassLoader());
     }
 
     public static final Creator<Loan> CREATOR = new Creator<Loan>() {
+        @Override
         public Loan createFromParcel(Parcel source) {
             return new Loan(source);
         }
 
+        @Override
         public Loan[] newArray(int size) {
             return new Loan[size];
         }

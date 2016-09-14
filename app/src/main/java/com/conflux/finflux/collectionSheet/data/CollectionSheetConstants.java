@@ -23,5 +23,9 @@ public class CollectionSheetConstants {
     public static final String COLLECTION_SHEET_DATA_USED_FOR_ADAPTER = "collection sheet data";
     public static final String EDIT_COLLECTION_SHEET_DATA_USED_FOR_ADAPTER = "edit_collection_sheet_data";
     public static final String COLLECTION_SHEET_DATA_FROM_SERVER = "collection sheet data from server";
+    public static final String TOTAL_DUE = "total due";
+    public static final String TOTAL_COLLECTED = "total collected";
+    public static final String CENTER_ID = "centerId";
+    public static final String IS_ALLREADY_COLLECTED = "isAllreadyCollected";
 
 }

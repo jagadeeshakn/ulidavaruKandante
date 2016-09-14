@@ -5,6 +5,7 @@ import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetPayload;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
+import com.conflux.finflux.collectionSheet.data.SaveCollectionSheetPayload;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.infrastructure.api.manager.SaveResponse;
@@ -69,7 +70,7 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                 });
     }
 
-    public void loadCollectionsForGroup(Long centerId, Payload payload) {
+    public void loadCollectionsForGroup(final Long centerId, Payload payload) {
         checkViewAttached();
         String instanceUrl = PrefManager.getInstanceUrl();
         mDataManager.mBaseApiManager.updateEndPoint(instanceUrl);
@@ -98,13 +99,13 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
                     @Override
                     public void onNext(CollectionSheetData collectionSheetData) {
                         Logger.d(getClass().getSimpleName(), "Successful");
-                        mCollectionMvpView.showCenterCollectionSheet(collectionSheetData);
+                        mCollectionMvpView.showCenterCollectionSheet(collectionSheetData, centerId);
                     }
                 });
 
     }
 
-    public void saveCollectionSheet(Long  centerId, CollectionSheetPayload payload) {
+    public void saveCollectionSheet(Long  centerId, SaveCollectionSheetPayload payload) {
         checkViewAttached();
         String instanceUrl = PrefManager.getInstanceUrl();
         mDataManager.mBaseApiManager.updateEndPoint(instanceUrl);
@@ -130,6 +131,8 @@ public class CollectionSheetPresenter extends BasePresenter<CollectionSheetMvpVi
 
                     @Override
                     public void onNext(SaveResponse saveResponse) {
+                        mCollectionMvpView.showProgressbar(false);
+                        Logger.d(getClass().getSimpleName(),"the response is "+saveResponse);
                     }
                 });
     }

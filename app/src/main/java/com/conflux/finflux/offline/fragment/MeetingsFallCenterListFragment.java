@@ -23,9 +23,11 @@ import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.core.FinBaseActivity;
 import com.conflux.finflux.core.FinBaseFragment;
 import com.conflux.finflux.db.LoginUser;
+import com.conflux.finflux.offline.activity.FetchCollection;
 import com.conflux.finflux.offline.data.CenterListHelper;
 import com.conflux.finflux.offline.data.DateString;
 import com.conflux.finflux.offline.data.ProductionCollectionSheedDataAssembler;
+import com.conflux.finflux.offline.databaseoperation.DownloadOperations;
 import com.conflux.finflux.offline.fragment.dummy.DummyContent.DummyItem;
 import com.conflux.finflux.util.Logger;
 
@@ -87,7 +89,6 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
         ((FinBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -102,6 +103,11 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
         view = inflater.inflate(R.layout.fragment_meetingsfallcenterlist_list, container, false);
         mCollectionSheetPresenter.attachView(this);
         ButterKnife.bind(this, view);
+        realm = Realm.getDefaultInstance();
+        if(realm.isClosed()){
+            Logger.d(TAG,"realm closed");
+            realm = Realm.getDefaultInstance();
+        }
         getProductionCollectionSheetData();
         Context context = view.getContext();
         if (mColumnCount <= 1) {
@@ -229,8 +235,10 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
     }
 
     @Override
-    public void showCenterCollectionSheet(CollectionSheetData collectionSheetData) {
+    public void showCenterCollectionSheet(CollectionSheetData collectionSheetData, Long centerId) {
         Logger.d(TAG,"successful group list "+collectionSheetData);
+        new DownloadOperations(getActivity(), collectionSheetData, centerListHelpers.get(mCountSelectedCenters), extendedProductionCollectiondatas, realm).save();
+        meetingsFallCenterListRecyclerViewAdapter.notifyDataSetChanged();
         ++mCountSelectedCenters;
         downloadNextCenter();
     }
@@ -264,10 +272,15 @@ public class MeetingsFallCenterListFragment extends FinBaseFragment implements C
         checkForMeetings();
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     public interface OnListFragmentInteractionListener {

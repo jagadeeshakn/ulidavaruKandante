@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,23 @@ import android.widget.TextView;
 
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.adapter.GroupCollectionListAdapter;
+import com.conflux.finflux.collectionSheet.assembler.GroupCollectionDataAssembler;
+import com.conflux.finflux.collectionSheet.assembler.SaveCollectionSheetPayloadAssembler;
 import com.conflux.finflux.collectionSheet.data.AttendanceType;
 import com.conflux.finflux.collectionSheet.data.BulkRepaymentTransactions;
+import com.conflux.finflux.collectionSheet.data.Client;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetConstants;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetDataForAdapter;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetPayload;
+import com.conflux.finflux.collectionSheet.data.Group;
 import com.conflux.finflux.collectionSheet.data.Loan;
 import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
+import com.conflux.finflux.collectionSheet.data.SaveCollectionSheetDataForListner;
+import com.conflux.finflux.collectionSheet.data.SaveCollectionSheetPayload;
+import com.conflux.finflux.collectionSheet.event.ClientCollectionSheetDataChangeListner;
 import com.conflux.finflux.collectionSheet.presenter.CollectionSheetPresenter;
+import com.conflux.finflux.collectionSheet.presenter.SaveCollectionSheetPresenter;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetGroupMvpView;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.core.FinBaseActivity;
@@ -34,13 +43,22 @@ import com.conflux.finflux.settings.activity.ApplicationSettings;
 import com.conflux.finflux.util.DateHelper;
 import com.conflux.finflux.util.ErrorDialogFragment;
 import com.conflux.finflux.util.Logger;
+import com.conflux.finflux.util.Toaster;
+import com.conflux.finflux.util.event.EventBus;
+import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import retrofit2.adapter.rxjava.HttpException;
@@ -53,7 +71,7 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
     private final String TAG = getClass().getSimpleName();
 
     @Inject
-    CollectionSheetPresenter mCollectionSheetPresenter;
+    SaveCollectionSheetPresenter mCollectionSheetPresenter;
 
     private View rootView;
     private String meetingDate;
@@ -68,8 +86,8 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
     TextView tv_center_name;
     @Bind(R.id.tv_center_name_bottom)
     TextView tv_center_name_bottom;
-    @Bind(R.id.group_recycler_view)
-    RecyclerView group_recycler_view;
+    @Bind(R.id.recycler_view_groups)
+    RecyclerView recyclerViewGroups;
     @Bind(R.id.tv_amount)
     TextView tv_amount;
     @Bind(R.id.tv_due_amount)
@@ -78,15 +96,31 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
     ArrayList<CollectionSheetDataForAdapter> collectionSheetDataAdapter;
     List<MeetingFallCenter> meetingFallCenters;
     CollectionSheetData collectionSheetData;
+    GroupCollectionListAdapter groupCollectionListAdapter;
+    private Long centerId;
+    private boolean isAllreadySubmitted;
 
-    public static CollectionSheetGroupList newInstance(ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapter, CollectionSheetData collectionSheetData, String dateString, String centerName,Long calenderId) {
+    public static CollectionSheetGroupList newInstance(ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapter, CollectionSheetData collectionSheetData, String dateString, String centerName,Long calenderId, Long centerId, boolean isAllreadyCollected) {
         CollectionSheetGroupList collectionSheetGroupList = new CollectionSheetGroupList();
         Bundle args = new Bundle();
         args.putParcelableArrayList(CollectionSheetConstants.COLLECTION_SHEET_DATA_FOR_ADAPTER, collectionSheetDataForAdapter);
         args.putParcelable(CollectionSheetConstants.COLLECTION_SHEET, collectionSheetData);
-        args.putString(CollectionSheetConstants.MEETING_DATE, dateString);
+        args.putLong(CollectionSheetConstants.CENTER_ID,centerId);
+        args.putBoolean(CollectionSheetConstants.IS_ALLREADY_COLLECTED,isAllreadyCollected);
+        SimpleDateFormat dateAsFullString = new SimpleDateFormat("dd MMMM yyyy");
+        SimpleDateFormat formatToddMMyyyy = new SimpleDateFormat("dd MM yyyy");
+        Date date =null;
+        String meetingDate = null;
+        try {
+            date = dateAsFullString.parse(dateString);
+            meetingDate = formatToddMMyyyy.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        args.putString(CollectionSheetConstants.MEETING_DATE, meetingDate);
         args.putString(CollectionSheetConstants.CENTER_NAME, centerName);
         args.putLong(CollectionSheetConstants.CALENDER_ID,calenderId);
+        collectionSheetGroupList.setArguments(args);
         return collectionSheetGroupList;
     }
 
@@ -94,6 +128,7 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((FinBaseActivity) getActivity()).getActivityComponent().inject(this);
+        Logger.d(TAG,"on Create ");
         if (getArguments() != null) {
             collectionSheetDataAdapter = getArguments().getParcelableArrayList(CollectionSheetConstants.COLLECTION_SHEET_DATA_FOR_ADAPTER);
             collectionSheetData = getArguments().getParcelable(CollectionSheetConstants.COLLECTION_SHEET);
@@ -102,26 +137,58 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
             Logger.d(TAG,"center meeting data is......."+meetingDate);
             centerName = getArguments().getString(CollectionSheetConstants.CENTER_NAME);
             calenderId = getArguments().getLong(CollectionSheetConstants.CALENDER_ID);
+            centerId = getArguments().getLong(CollectionSheetConstants.CENTER_ID);
+            isAllreadySubmitted =getArguments().getBoolean(CollectionSheetConstants.IS_ALLREADY_COLLECTED);
         }
-        setRetainInstance(true);
+    }
+
+    @Subscribe
+    public void updateEditedCollectionSheetDetail(ClientCollectionSheetDataChangeListner data){
+        Logger.d(TAG,"the collection sheet data is on event "+data.getClientCollectionSheetData());
+
+        for(Group group : collectionSheetData.getGroups()) {
+            if(data.getClientCollectionSheetData().getParentId().equals(group.getGroupId())){
+                for(Client client : group.getClients()){
+                    if(client.getClientId().equals(data.getClientCollectionSheetData().getEntityId()) && data.getClientCollectionSheetData().getEntityType().equals(CollectionSheetConstants.CLIENT)){
+                        client.setLoans(data.getClientCollectionSheetData().getLoans());
+                        client.setAttendanceType(data.getClientCollectionSheetData().getAttendanceType());
+                    }
+                }
+            }
+        }
+        ArrayList<CollectionSheetDataForAdapter> dataAdapter = new GroupCollectionDataAssembler().assembleDataForGroupList(collectionSheetData,null);
+        for(int i =0 ; i < dataAdapter.size() ; i++){
+            collectionSheetDataAdapter.remove(i);
+            collectionSheetDataAdapter.add(i,dataAdapter.get(i));
+        }
+        groupCollectionListAdapter.notifyDataSetChanged();
+        Logger.d(TAG,"the collection sheet data adapeter is "+new Gson().toJson(collectionSheetDataAdapter));
+
+        displayTotalDueAndColected();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        inflater.inflate(R.layout.fragment_group_collection_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_group_collection_list, container, false);
+        ButterKnife.bind(this,rootView);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        group_recycler_view.setLayoutManager(mLayoutManager);
+        Logger.d(TAG, "The Layout is " + mLayoutManager);
+        EventBus.getInstance().register(this);
+        recyclerViewGroups.setLayoutManager(mLayoutManager);
+        mCollectionSheetPresenter.attachView(this);
         getToolbar();
         setToolbarTitle(getString(R.string.collection_sheet));
         setCenterDetails();
         showCenterDetailsList();
+
         return rootView;
     }
 
     public void setCenterDetails() {
         try {
+            Logger.d(TAG,"the meeting date is "+meetingDate);
             Spanned spanned = DateHelper.getDateFormatTodisplay(meetingDate);
             tv_meeting_date.setText(spanned);
             tv_center_name.setText(centerName);
@@ -130,93 +197,70 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCollectionSheetPresenter.detachView();
-    }
 
     public void showCenterDetailsList() {
-        GroupCollectionListAdapter groupCollectionListAdapter = new GroupCollectionListAdapter(getActivity(), collectionSheetDataAdapter);
-        group_recycler_view.setAdapter(groupCollectionListAdapter);
-    }
-
-    @OnItemClick(R.id.group_recycler_view)
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Logger.d(TAG, "list item " + i + " clicked");
-        if (collectionSheetDataAdapter.get(i).getEntityType().equals(CollectionSheetConstants.CLIENT)) {
-            Logger.d(TAG, "item Selected is a client");
-
-            ClientLoanProductsDialogFragment clientLoanProductsDialogFragment = ClientLoanProductsDialogFragment.newInstance(collectionSheetDataAdapter.get(i),collectionSheetData);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.addToBackStack(CollectionSheetConstants.LOAN_PRODUCT_DIALOG_FRAGMENT);
-            // clientLoanProductsDialogFragment.show(fragmentTransaction,"client loan product fragment");
-        }
-    }
-
-    private void calculateTotalCollectedAmount(ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapters) {
-        double collectedAmount = 0;
-        for (CollectionSheetDataForAdapter collectionSheetDataForAdapter : collectionSheetDataForAdapters) {
-            if (collectionSheetDataForAdapter.getEntityType().equals(CollectionSheetConstants.GROUP)) {
-                if (collectionSheetDataForAdapter.getCollectedAmount() != null) {
-
-                    collectedAmount = collectedAmount + collectionSheetDataForAdapter.getCollectedAmount();
-                } else {
-                    collectedAmount = collectedAmount + collectionSheetDataForAdapter.getDueAmount();
+        groupCollectionListAdapter = new GroupCollectionListAdapter(getActivity(), collectionSheetDataAdapter);
+        recyclerViewGroups.setAdapter(groupCollectionListAdapter);
+        ((GroupCollectionListAdapter)groupCollectionListAdapter).setOnItemClickListener(new GroupCollectionListAdapter.MyClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                if(collectionSheetDataAdapter.get(position).getEntityType().equals(CollectionSheetConstants.CLIENT)) {
+                    ClientLoanProductsDialogFragment clientLoanProductsDialogFragment = ClientLoanProductsDialogFragment.newInstance(collectionSheetDataAdapter.get(position), collectionSheetData);
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+                            .beginTransaction();
+                    fragmentTransaction.addToBackStack(CollectionSheetConstants.LOAN_PRODUCT_DIALOG_FRAGMENT);
+                    clientLoanProductsDialogFragment.show(getChildFragmentManager(), CollectionSheetConstants.LOAN_PRODUCT_DIALOG_FRAGMENT);
                 }
             }
-        }
-        Logger.d(TAG, "the collected amount from groups is " + collectedAmount);
+        });
+        displayTotalDueAndColected();
     }
 
-    private static CollectionSheetPayload generateCollectionSheetPayload(ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapters, String meetingDate, CollectionSheetData collectionSheet, Long calendarId){
-        CollectionSheetPayload collectionSheetPayload = new CollectionSheetPayload();
-        String transactionDate = DateHelper.getDateFormatFullName(meetingDate);
-        ArrayList<AttendanceType> clientAttendance = new ArrayList<AttendanceType>();
-        ArrayList<BulkRepaymentTransactions> bulkRepaymentTransactions = new ArrayList<BulkRepaymentTransactions>();
-        for (CollectionSheetDataForAdapter collectionSheetDataForAdapter : collectionSheetDataForAdapters) {
-            if (collectionSheetDataForAdapter.getEntityType().equals(CollectionSheetConstants.CLIENT)) {
-                /*for (AttendanceType attendance : collectionSheet.getAttendanceTypeOptions()) {
-                    if (attendance.getValue().toLowerCase().equals(CollectionSheetConstants.PRESENT)) {
-                        AttendanceType attendanceType = new AttendanceType(collectionSheetDataForAdapter.getEntityId(),attendance.getAttendanceTypeId());
-                        clientAttendance.add(attendanceType);
-                    }
-                }*/
-
-                for (Loan loan : collectionSheetDataForAdapter.getLoans()) {
-                    BulkRepaymentTransactions bulkRepaymentTransaction = new BulkRepaymentTransactions();
-                    bulkRepaymentTransaction.setLoanId(loan.getLoanId());
-                    bulkRepaymentTransaction.setTransactionAmount(loan.getTotalDue());
-                    bulkRepaymentTransactions.add(bulkRepaymentTransaction);
-                }
-            }
-        }
-            collectionSheetPayload.setCalendarId(calendarId);
-            collectionSheetPayload.setDateFormat(CollectionSheetConstants.DATE_FORMAT);
-            collectionSheetPayload.setClientsAttendance(clientAttendance);
-            collectionSheetPayload.setTransactionDate(transactionDate);
-            collectionSheetPayload.setBulkRepaymentTransactions(bulkRepaymentTransactions);
-            return collectionSheetPayload;
+    private void displayTotalDueAndColected(){
+        Double totalDue = new GroupCollectionDataAssembler().claculateGroupTotal(collectionSheetDataAdapter, CollectionSheetConstants.TOTAL_DUE);
+        Double totalCollected = new GroupCollectionDataAssembler().claculateGroupTotal(collectionSheetDataAdapter, CollectionSheetConstants.TOTAL_COLLECTED);
+        tv_due_amount.setText(String.valueOf(totalDue));
+        tv_amount.setText(String.valueOf(totalCollected));
     }
+
+
 
     @OnClick(R.id.submit)
     public void submit(View view) {
-
+        if(!isAllreadySubmitted){
+            SaveCollectionSheetPayload saveCollectionSheetPayload = new SaveCollectionSheetPayloadAssembler().assemblePayload(collectionSheetDataAdapter,calenderId, meetingDate);
+            Logger.d(TAG,"the Payload is "+saveCollectionSheetPayload);
+            mCollectionSheetPresenter.saveCollectionSheet(centerId,saveCollectionSheetPayload);
+        }
     }
 
     @Override
     public void showProgressbar(boolean b) {
-
+        if(b){
+            showFinfluxProgressDialog("Please Wait");
+        }else {
+            hideFinfluxProgressBar();
+        }
     }
 
     @Override
     public void showCollectionSheetSaved(SaveResponse saveResponse) {
-
+        Logger.d(TAG,"Success");
+        Toaster.show(rootView,R.string.collection_sheet_save_successfull);
+        //call print activity
+        EventBus.getInstance().post(new SaveCollectionSheetDataForListner(centerId,new Double(tv_amount.getText().toString()),false));
+        getActivity().onBackPressed();
     }
 
     @Override
     public void showFetchingError(HttpException response) {
+        Logger.d(TAG,"Failure");
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCollectionSheetPresenter.detachView();
+        EventBus.getInstance().unregister(this);
     }
 }

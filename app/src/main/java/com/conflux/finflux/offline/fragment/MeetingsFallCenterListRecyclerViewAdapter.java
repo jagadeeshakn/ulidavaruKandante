@@ -68,15 +68,14 @@ public class MeetingsFallCenterListRecyclerViewAdapter extends RecyclerView.Adap
         holder.textViewTotalDue.setText(context.getString(R.string.label_center_total_due)+" : "+String.valueOf(meetingFallCenter.getTotaldue()));
         holder.textViewTotalCollected.setText(context.getString(R.string.label_center_total_collected)+" : "+String.valueOf(meetingFallCenter.getTotalCollected()));
         holder.textViewStatus.setText(centerWIthMeetingAndCheckedStatuses.get(position).getReason());
-        if(centerListHelper.isCanDownload()){
+        if(!centerListHelper.isCanDownload()){
             holder.cardView.setClickable(false);
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layed_red));
             holder.checkBox.setChecked(false);
             centerListHelper.checkedStatus = false;
         }else {
             holder.cardView.setClickable(true);
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layed_reen));
-            holder.textViewStatus.setText(context.getString(R.string.collection_status_can_download));
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layed_green));
         }
 
         if(centerWIthMeetingAndCheckedStatuses.get(position).checkedStatus){

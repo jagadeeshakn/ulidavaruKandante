@@ -5,6 +5,4 @@
     <dimen name="margin.bottom.zero">0dp</dimen>
     <dimen name="margin.left.zero">0dp</dimen>
     <dimen name="margin.right.zero">0dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
 </resources>

@@ -83,11 +83,7 @@ public class RealmAutoIncrement {
     }
 
     public static RealmAutoIncrement getInstance(Realm realm) {
-
-        if (autoIncrementMap == null) {
             autoIncrementMap = new RealmAutoIncrement(realm);
-        }
-
         return autoIncrementMap;
     }
 }

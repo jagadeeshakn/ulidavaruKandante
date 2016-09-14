@@ -6,7 +6,6 @@
     <string name="url">IP Address/URL</string>
     <string name="port">Port Number</string>
     <string name="tenant">Tenant Identifier</string>
-    <string name="title_activity_fullscreen1">FullscreenActivity1</string>
     <string name="save">Save</string>
 
 
@@ -18,7 +17,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_application_activation">ApplicationActivation</string>
     <string name="title_sliding_activity">Finflux</string>
-    <string name="collection_sheet_activity">Collection Sheet Activity</string>
 
     //login strings
     <string name="url_error_empty">Please provide valid url/ip address.</string>
@@ -36,15 +34,9 @@
     <string name="error_unknown">There was some error processing your request.</string>
 
     <!-- General Terms Begin Here -->
-    <string name="dashboard">Dashboard</string>
-    <string name="clients">Clients</string>
     <string name="collections">Collection Sheet</string>
-    <string name="groups">Groups</string>
-    <string name="centers">Centers</string>
-    <string name="path_tracker">Path Tracker</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
-    <string name="survey">Survey</string>
     <string name="offline">Offline *</string>
     <string name="entity_name">Entity Name</string>
     <string name="attendence">Attendence</string>
@@ -53,6 +45,7 @@
     <string name="meeting_location">Location</string>
     <string name="client_name">ClientName</string>
     <string name="product_name">ProductName</string>
+    <string name="network.offline">No Internet Connection...</string>
 
 
     //logout
@@ -65,56 +58,16 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
 
     <!-- settings  -->
     <string name="pref_header_collectionsheet">Collectionsheet Print Settings</string>
     <string name="dialog_turn_on_printing_device">Please turn on Printer and then click Ok.</string>
     <string name="error_select_paired_device">Please Select Paired device.</string>
     <string name="alert_message">Alert</string>
-    <string name="pref_title_sync_frequency">Sync frequency</string>
     <string name="select_blue_tooth_device">Select Bluetooth paired device</string>
     <string name="enable_peripherals">enable_peripherals</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
+    <!--  settings  -->
     <string name="pref_header_device">Device Settings</string>
 
     <string name="error_connecting_printer">Unable to connect printer.</string>
@@ -128,8 +81,6 @@
 
     <string name="pref_title_enable_printer">Enable Printer</string>
     <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_print_office_copy_receipt">Print office copy of Receipt</string>
 
 
     <!--offline strings starts here-->
@@ -145,16 +96,15 @@
     <string name="label.center.total.due">Total due</string>
     <string name="label.center.total.collected">Total Collected</string>
     <string name="offline.center.status">Status</string>
-    <string name="collection.status.completed">Collection completed</string>
     <string name="collection.status.can.download">Available to Download</string>
     <string name="button.label.download">Download</string>
     <string name="center.download.status.already.downloaded">Center already Downloaded</string>
     <string name="center.download.status.center.no.collection">Center has no collection</string>
     <string name="center.download.status.center.collection.completed">Center Collection Completed</string>
+    <string name="center.download.status.downloaded.successfully">Downloaded Successfully</string>
 
     <!--datepicker fragment-->
     <string name="button.submit">Submit</string>
-    <string name="select.date.range">Select date</string>
 
     <!--error dialog fragment-->
     <string name="error_message">Error Message</string>
@@ -171,6 +121,7 @@
     <string name="center_meeting">center meeting</string>
     <string name="center_name">Center Name</string>
     <string name="small_text">Small Text</string>
+    <string name="collection.sheet.save.successfull">Collection sheet saved successfully.</string>
 
 </resources>
 

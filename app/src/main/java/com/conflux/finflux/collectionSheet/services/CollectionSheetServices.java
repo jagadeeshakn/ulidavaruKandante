@@ -4,6 +4,7 @@ import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetPayload;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
+import com.conflux.finflux.collectionSheet.data.SaveCollectionSheetPayload;
 import com.conflux.finflux.infrastructure.api.constants.APIEndPoint;
 import com.conflux.finflux.infrastructure.api.manager.SaveResponse;
 import com.conflux.finflux.util.PrefManager;
@@ -37,6 +38,6 @@ public interface CollectionSheetServices {
 
     @Headers({ACCEPT_JSON,CONTENT_TYPE_JSON})
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
-    Observable<SaveResponse> saveCollectionSheet(@Path("centerId") long centerId, @Body CollectionSheetPayload collectionSheetPayload);
+    Observable<SaveResponse> saveCollectionSheet(@Path("centerId") long centerId, @Body SaveCollectionSheetPayload collectionSheetPayload);
 
 }

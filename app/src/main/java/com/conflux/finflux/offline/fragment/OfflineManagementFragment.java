@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import com.conflux.finflux.R;
 import com.conflux.finflux.injection.component.ActivityComponent;
 import com.conflux.finflux.offline.activity.FetchCollection;
+import com.conflux.finflux.offline.activity.OfflineManagement;
 import com.conflux.finflux.util.Logger;
+import com.conflux.finflux.util.Toaster;
 import com.conflux.finflux.util.event.EventBus;
 import com.squareup.otto.Bus;
 
@@ -44,6 +46,7 @@ public class OfflineManagementFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_offline_management, container, false);
         ButterKnife.bind(this,rootView);
         Logger.d(TAG,"onCreate View");
+
         return  rootView;
     }
 
@@ -51,6 +54,7 @@ public class OfflineManagementFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Logger.d(TAG,"onViewCreated");
+
 
     }
 

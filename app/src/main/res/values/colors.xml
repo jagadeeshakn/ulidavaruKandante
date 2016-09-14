@@ -1,31 +1,25 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-    <color name="blue">#0099cc</color>
-    <color name="light_blue">#33b5e5</color>
+    <!--<color name="blue">#0099cc</color>-->
+    <color name="blue">#1894f6</color>
     <color name="green">#57ae09</color>
-    <color name="layed.reen">#8f67cc0d</color>
-    <color name="primary_dark">#E12929</color>
-    <color name="primary_darker">#CC1D1D</color>
+    <color name="layed.green">#8f67cc0d</color>
     <color name="accent">#fcfcfc</color>
     <color name="black">#000000</color>
-    <color name="jet">#222222</color>
-    <color name="oil">#333333</color>
-    <color name="monsoon">#777777</color>
-    <color name="jumbo">#888888</color>
-    <color name="aluminum">#999999</color>
-    <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="primary">#1894f6</color>
     <color name="primary_text">#212121</color>
     <color name="ash_grey">#b6b3b3</color>
-    <color name="ashs.grey">#e5e5e5</color>
-    <color name="shallow.green">#80c2ae</color>
-    <color name="shallow.green.light">#0e4534</color>
     <color name="orange">#ff6f0f</color>
-    <color name="finflux_theme_color">#01AAEC</color>
+    <!--<color name="finflux_theme_color">#01AAEC</color>-->
+    <color name="finflux_theme_color">#1894f6</color>
     <color name="red_dark">#ffcc0000</color>
     <color name="layed.red">#7fff0101</color>
+
+    <color name="edit_text_onfocus">#6666FF</color>
+    <!-- A light Holo shade of orange -->
+    <color name="orange_light">#ffffbb33</color>
 
 </resources>

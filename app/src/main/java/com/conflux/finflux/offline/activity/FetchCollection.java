@@ -19,15 +19,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.realm.Realm;
+
 public class FetchCollection extends FinBaseActivity implements MeetingsFallCenterListFragment.OnListFragmentInteractionListener {
 
     private final String TAG = getClass().getSimpleName();
+    private static Realm realm;
+
+    public static Realm getRealm() {
+        return realm;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fetch_collection);
+        realm = Realm.getDefaultInstance();
         getActivityComponent().inject(this);
         EventBus.getInstance().register(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,6 +58,7 @@ public class FetchCollection extends FinBaseActivity implements MeetingsFallCent
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        realm.close();
         EventBus.getInstance().unregister(this);
     }
 

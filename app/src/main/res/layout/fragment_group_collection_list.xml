@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/global_container"
     android:layout_width="match_parent"
+    android:elevation="-5dp"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/finflux_theme_color"
         android:orientation="horizontal"
+        android:elevation="-5dp"
         android:weightSum="3">
 
         <TextView
@@ -31,6 +33,7 @@
         android:id="@+id/meeting_date_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="-5dp"
         android:layout_below="@+id/center_name_header"
         android:background="@color/finflux_theme_color"
         android:orientation="horizontal"
@@ -42,6 +45,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="50dp"
+            android:textColor="@color/white"
             android:layout_weight="3"
             android:paddingTop="5dp" />
     </LinearLayout>
@@ -143,15 +147,11 @@
     </LinearLayout>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/group_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/ll_center_info"
-        android:layout_below="@+id/meeting_date_header"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:scrollbars="vertical" />
+<android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/meeting_date_header"
+    android:layout_above="@id/ll_center_info"
+    android:id="@+id/recycler_view_groups"/>
 
 </RelativeLayout>

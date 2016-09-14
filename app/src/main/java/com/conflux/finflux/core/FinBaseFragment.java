@@ -2,8 +2,11 @@ package com.conflux.finflux.core;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +15,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.conflux.finflux.R;
+import com.conflux.finflux.util.AppConstants;
+import com.conflux.finflux.util.Logger;
+import com.conflux.finflux.util.Toaster;
 
 /**
  * Created by jagadeeshakn on 7/8/2016.
@@ -39,6 +45,7 @@ public class FinBaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().registerReceiver(broadcastReceiver,new IntentFilter(AppConstants.NetworkChangeListner));
         inputManager = (InputMethodManager) getActivity().getSystemService(Context
                 .INPUT_METHOD_SERVICE);
         mProgressBarHandler = new FinProgressBarHandler(getActivity());
@@ -110,4 +117,27 @@ public class FinBaseFragment extends Fragment {
         }
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras().getBundle(AppConstants.Network);
+            boolean isOnline = bundle.getBoolean(AppConstants.NetworkStatus);
+            Logger.d(getClass().getSimpleName(),"the network is online ?"+isOnline);
+            setConnectivitytatus(isOnline);
+        }
+    };
+
+    public void setConnectivitytatus(final boolean isOnline){
+        if(isAdded()) {
+            if (!isOnline) {
+                Toaster.show(getView(), getString(R.string.network_offline));
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
 }

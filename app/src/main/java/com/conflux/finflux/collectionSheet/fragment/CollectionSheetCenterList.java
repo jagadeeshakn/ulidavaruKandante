@@ -1,5 +1,9 @@
 package com.conflux.finflux.collectionSheet.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.adapter.CenterCollectionListAdapter;
+import com.conflux.finflux.collectionSheet.assembler.GroupCollectionDataAssembler;
 import com.conflux.finflux.collectionSheet.data.Client;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetConstants;
 import com.conflux.finflux.collectionSheet.data.CollectionSheetData;
@@ -24,17 +29,26 @@ import com.conflux.finflux.collectionSheet.data.Loan;
 import com.conflux.finflux.collectionSheet.data.MeetingFallCenter;
 import com.conflux.finflux.collectionSheet.data.Payload;
 import com.conflux.finflux.collectionSheet.data.ProductiveCollectionData;
+import com.conflux.finflux.collectionSheet.data.SaveCollectionSheetDataForListner;
+import com.conflux.finflux.collectionSheet.event.SaveCollectionSheetEventListner;
 import com.conflux.finflux.collectionSheet.presenter.CollectionSheetPresenter;
 import com.conflux.finflux.collectionSheet.viewServices.CollectionSheetMvpView;
 import com.conflux.finflux.core.FinBaseActivity;
 import com.conflux.finflux.core.FinBaseFragment;
 import com.conflux.finflux.db.LoginUser;
 import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
+import com.conflux.finflux.util.AppConstants;
 import com.conflux.finflux.util.DateHelper;
 import com.conflux.finflux.util.ErrorDialogFragment;
 import com.conflux.finflux.util.FragmentConstants;
 import com.conflux.finflux.util.Logger;
 import com.conflux.finflux.util.MFDatePicker;
+import com.conflux.finflux.util.Network;
+import com.conflux.finflux.util.bluetooth.services.BroadCastReceiverService;
+import com.conflux.finflux.util.event.EventBus;
+import com.conflux.finflux.util.network.ChangeReceiver;
+import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,6 +99,7 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
     private String code;
 
     private List<MeetingFallCenter> meetingFallCenterList;
+    private CenterCollectionListAdapter collectionListAdapter;
 
     public static CollectionSheetCenterList newInstance() {
         CollectionSheetCenterList centerList = new CollectionSheetCenterList();
@@ -95,6 +110,7 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
     public CollectionSheetCenterList() {
         //Required public empty constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,19 +123,24 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_center_collection_sheet, container, false);
-        ButterKnife.bind(this, rootView);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_center_collection_sheet, container, false);
+            ButterKnife.bind(this, rootView);
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            lv_recycler_view.setLayoutManager(layoutManager);
+            lv_recycler_view.setItemAnimator(new DefaultItemAnimator());
+            mCollectionSheetPresenter.attachView(this);
+            EventBus.getInstance().register(this);
+            getToolbar();
+            setToolbarTitle(getString(R.string.collection_sheet));
+            setCenterMeetingDate();
+            inflateMeetingDate();
+        }
+        if (!mCollectionSheetPresenter.isViewAttached()) {
+            mCollectionSheetPresenter.attachView(this);
+        }
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        lv_recycler_view.setLayoutManager(layoutManager);
-        lv_recycler_view.setItemAnimator(new DefaultItemAnimator());
-
-        mCollectionSheetPresenter.attachView(this);
-        getToolbar();
-        setToolbarTitle(getString(R.string.collection_sheet));
-        setCenterMeetingDate();
-        inflateMeetingDate();
         return rootView;
     }
 
@@ -166,6 +187,10 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
         String dayNumberSuffix = DateHelper.getDayNumberSuffix(Integer.parseInt(selectedDay));
         Spanned spanned = Html.fromHtml(selectedDay + dayNumberSuffix + getString(R.string.center_meeting));
         tv_today_date.setText(spanned);
+        if(collectionListAdapter != null && meetingFallCenterList != null){
+            meetingFallCenterList.clear();
+            collectionListAdapter.notifyDataSetChanged();
+        }
         setProductiveCollectionPayload(staffId);
 
     }
@@ -218,7 +243,7 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
         try {
             meetingFallCenterList = centerCollectionTaskData.getMeetingFallCenters();
             calculateCenterTotal(meetingFallCenterList);
-            CenterCollectionListAdapter collectionListAdapter = new CenterCollectionListAdapter(getActivity(), meetingFallCenterList);
+            collectionListAdapter = new CenterCollectionListAdapter(getActivity(), meetingFallCenterList);
             lv_recycler_view.setAdapter(collectionListAdapter);
             ((CenterCollectionListAdapter) collectionListAdapter).setOnItemClickListener(new CenterCollectionListAdapter.MyClickListener() {
                 @Override
@@ -228,7 +253,7 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
                             Payload payload = new Payload();
                             long centerId = meetingFallCenterList.get(position).getId();
                             centerName = meetingFallCenterList.get(position).getName();
-                            calendarId = meetingFallCenterList.get(position).getCollectionMeetingCalendar().getCalendarInstanceId();
+                            calendarId = meetingFallCenterList.get(position).getCollectionMeetingCalendar().getId();
                             payload.setDateFormat(CollectionSheetConstants.DATE_FORMAT);
                             payload.setLocale(CollectionSheetConstants.EN);
                             payload.setTransactionDate(dateString);
@@ -263,62 +288,29 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
                 }
             }
         }
-        //String centerTotalDue = CurrencyFormatter.getCurrencyFormat(en, code, totalDue);
-        // String centerTotalCollected = CurrencyFormatter.getCurrencyFormat(en, code, totalCollected);
         tv_total_collection.setText(String.valueOf(totalDue));
         tv_actual_collection.setText(String.valueOf(totalCollected));
 
     }
 
     @Override
-    public void showCenterCollectionSheet(CollectionSheetData collectionSheetData) {
+    public void showCenterCollectionSheet(CollectionSheetData collectionSheetData, Long centerId) {
         Logger.d(TAG, "centerwise collection sheet generated successfully     " + collectionSheetData);
-
-        ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapters = getGroupDeatils(collectionSheetData);
-        for (CollectionSheetDataForAdapter collectionSheetDataForAdapter : collectionSheetDataForAdapters) {
-            if (collectionSheetDataForAdapter.getLoans() != null) {
-                for (Loan loan : collectionSheetDataForAdapter.getLoans()) {
-                    Logger.d(TAG, "loan product short name  " + loan.getProductShortName() + " total due " + loan.getTotalDue());
+        GroupCollectionDataAssembler assembler = new GroupCollectionDataAssembler();
+        ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapters = assembler.assembleDataForGroupList(collectionSheetData,null);
+        boolean isAlreadyCollected = false;
+        for(MeetingFallCenter center: meetingFallCenterList){
+            if(center.getId().equals(centerId)){
+                if(center.getTotalCollected() != 0){
+                    isAlreadyCollected = true;
                 }
             }
         }
-        replaceFragment(CollectionSheetGroupList.newInstance(collectionSheetDataForAdapters, collectionSheetData, dateString, centerName,calendarId), false, R.id.container);
+        Logger.d(TAG,"The date string is "+dateString);
+        replaceFragment(CollectionSheetGroupList.newInstance(collectionSheetDataForAdapters, collectionSheetData, dateString, centerName,calendarId, centerId, isAlreadyCollected), true, R.id.container);
     }
 
-    private ArrayList<CollectionSheetDataForAdapter> getGroupDeatils(CollectionSheetData collectionSheetData) {
-        ArrayList<CollectionSheetDataForAdapter> collectionSheetDataForAdapter = new ArrayList<CollectionSheetDataForAdapter>();
-        for (Group group : collectionSheetData.getGroups()) {
-            double totalDue = 0;
-            double totalCollected = 0;
-            for (Client client : group.getClients()) {
-                CollectionSheetDataForAdapter collectionSheetDataForAdapterClient = new CollectionSheetDataForAdapter();
-                collectionSheetDataForAdapterClient.setEntityId(client.getClientId());
-                collectionSheetDataForAdapterClient.setEntityType(CollectionSheetConstants.CLIENT);
-                collectionSheetDataForAdapterClient.setEntityName(client.getClientName());
-                collectionSheetDataForAdapterClient.setParentId(group.getGroupId());
-                Logger.d(TAG, "the group id " + group.getGroupId());
-                double clientToalDue = 0;
-                collectionSheetDataForAdapterClient.setLoans(client.getLoans());
-                for (Loan loan : client.getLoans()) {
-                    clientToalDue = clientToalDue + loan.getTotalDue();
-                }
-                totalDue = totalDue + clientToalDue;
-                collectionSheetDataForAdapterClient.setDueAmount(clientToalDue);
-                collectionSheetDataForAdapterClient.setCollectedAmount(clientToalDue);
-                collectionSheetDataForAdapterClient.setAttendanceType(client.getAttendanceType());
-                collectionSheetDataForAdapter.add(collectionSheetDataForAdapterClient);
-            }
-            CollectionSheetDataForAdapter collectionSheetDataForAdapterGroup = new CollectionSheetDataForAdapter();
-            collectionSheetDataForAdapterGroup.setEntityId(group.getGroupId());
-            collectionSheetDataForAdapterGroup.setEntityName(group.getGroupName());
-            collectionSheetDataForAdapterGroup.setEntityType(CollectionSheetConstants.GROUP);
-            collectionSheetDataForAdapterGroup.setDueAmount(totalDue);
-            totalCollected = totalDue;
-            collectionSheetDataForAdapterGroup.setCollectedAmount(totalCollected);
-            collectionSheetDataForAdapter.add(collectionSheetDataForAdapterGroup);
-        }
-        return collectionSheetDataForAdapter;
-    }
+
 
 
     @Override
@@ -340,8 +332,26 @@ public class CollectionSheetCenterList extends FinBaseFragment implements Collec
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDetach() {
+        super.onDetach();
         mCollectionSheetPresenter.detachView();
+        EventBus.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void updateCenterDetails(SaveCollectionSheetEventListner eventListner){
+        for(MeetingFallCenter center : meetingFallCenterList){
+            if(center.getId().equals(eventListner.getSaveCollectionSheetDataForListner().getCenterId())){
+                center.setTotalCollected(eventListner.getSaveCollectionSheetDataForListner().getCollectedAmount());
+            }
+        }
+        collectionListAdapter.notifyDataSetChanged();
+        calculateCenterTotal(meetingFallCenterList);
+    }
+
+    @Override
+    public void setConnectivitytatus(boolean isOnline) {
+        super.setConnectivitytatus(isOnline);
+        Logger.d(TAG,"In center List "+isOnline);
     }
 }

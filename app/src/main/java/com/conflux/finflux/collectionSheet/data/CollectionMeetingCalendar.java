@@ -13,7 +13,7 @@ import java.util.List;
  * Created by jagadeeshakn on 7/11/2016.
  */
 public class CollectionMeetingCalendar implements Parcelable {
-
+    private Long id;
     Long calendarInstanceId;
     long calendarId;
     Long entityId;
@@ -139,6 +139,14 @@ public class CollectionMeetingCalendar implements Parcelable {
     public CollectionMeetingCalendar() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -146,25 +154,27 @@ public class CollectionMeetingCalendar implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.calendarInstanceId);
+        dest.writeValue(this.id);
+        dest.writeValue(this.calendarInstanceId);
         dest.writeLong(this.calendarId);
-        dest.writeLong(this.entityId);
-        dest.writeParcelable(this.entityType, 0);
+        dest.writeValue(this.entityId);
+        dest.writeParcelable(this.entityType, flags);
         dest.writeString(this.title);
         dest.writeString(this.description);
         dest.writeString(this.location);
-        dest.writeParcelable(this.meetingCalendarDate, 0);
+        dest.writeParcelable(this.meetingCalendarDate, flags);
         dest.writeParcelable(this.meetingTime, flags);
-        dest.writeByte(repeating ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.repeating ? (byte) 1 : (byte) 0);
         dest.writeString(this.recurrence);
         dest.writeList(this.startDate);
     }
 
     protected CollectionMeetingCalendar(Parcel in) {
-        this.calendarInstanceId = in.readLong();
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.calendarInstanceId = (Long) in.readValue(Long.class.getClassLoader());
         this.calendarId = in.readLong();
-        this.entityId = in.readLong();
-        this.entityType = in.readParcelable(CodeValue.class.getClassLoader());
+        this.entityId = (Long) in.readValue(Long.class.getClassLoader());
+        this.entityType = in.readParcelable(Status.class.getClassLoader());
         this.title = in.readString();
         this.description = in.readString();
         this.location = in.readString();
@@ -173,14 +183,16 @@ public class CollectionMeetingCalendar implements Parcelable {
         this.repeating = in.readByte() != 0;
         this.recurrence = in.readString();
         this.startDate = new ArrayList<Integer>();
-        in.readList(this.startDate, List.class.getClassLoader());
+        in.readList(this.startDate, Integer.class.getClassLoader());
     }
 
     public static final Creator<CollectionMeetingCalendar> CREATOR = new Creator<CollectionMeetingCalendar>() {
+        @Override
         public CollectionMeetingCalendar createFromParcel(Parcel source) {
             return new CollectionMeetingCalendar(source);
         }
 
+        @Override
         public CollectionMeetingCalendar[] newArray(int size) {
             return new CollectionMeetingCalendar[size];
         }

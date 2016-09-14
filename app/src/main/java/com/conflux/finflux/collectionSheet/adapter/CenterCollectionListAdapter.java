@@ -65,6 +65,8 @@ public class CenterCollectionListAdapter extends RecyclerView.Adapter<CenterColl
             }
         }catch (TimeFormatException e){
             e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }

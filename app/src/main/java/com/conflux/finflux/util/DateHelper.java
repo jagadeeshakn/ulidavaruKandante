@@ -328,7 +328,7 @@ public class DateHelper {
     // dd/mmmm/yyyy
     public static String getDateFormatFullString(String meetingDate){
         String[] date = meetingDate.split(" ");
-        String day = removeLeadingZeroes(date[0]);
+        String day = date[0];
         String month = getMonthFullName(Integer.parseInt(date[1]));
         String year = date[2];
         return day+" "+month+" "+year;

@@ -2,14 +2,21 @@ package com.conflux.finflux.collectionSheet.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-/**
- * Created by jagadeeshakn on 7/30/2016.
+/*
+ * Created by Praveen J U on 7/27/2016.
  */
 public class BulkRepaymentTransactions implements Parcelable {
-
     private Long loanId;
     private double transactionAmount;
+
+    private BulkRepaymentTransactions(final Long loanId, final double transactionAmount){
+        this.loanId = loanId;
+        this.transactionAmount = transactionAmount;
+    }
+
+    public static BulkRepaymentTransactions instance(final Long loanId, final double transactionAmount){
+        return new BulkRepaymentTransactions(loanId, transactionAmount);
+    }
 
     public Long getLoanId() {
         return loanId;
@@ -35,6 +42,10 @@ public class BulkRepaymentTransactions implements Parcelable {
                 '}';
     }
 
+    public BulkRepaymentTransactions() {
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -46,19 +57,18 @@ public class BulkRepaymentTransactions implements Parcelable {
         dest.writeDouble(this.transactionAmount);
     }
 
-    public BulkRepaymentTransactions() {
-    }
-
     protected BulkRepaymentTransactions(Parcel in) {
         this.loanId = (Long) in.readValue(Long.class.getClassLoader());
         this.transactionAmount = in.readDouble();
     }
 
     public static final Creator<BulkRepaymentTransactions> CREATOR = new Creator<BulkRepaymentTransactions>() {
+        @Override
         public BulkRepaymentTransactions createFromParcel(Parcel source) {
             return new BulkRepaymentTransactions(source);
         }
 
+        @Override
         public BulkRepaymentTransactions[] newArray(int size) {
             return new BulkRepaymentTransactions[size];
         }

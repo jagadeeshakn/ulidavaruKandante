@@ -47,12 +47,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/attendence"
-            />
+            android:textStyle="bold" />
         <Spinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="@style/spinner_style"
+            android:spinnerMode="dialog"
             android:id="@+id/sp_attendance"/>
     </LinearLayout>
     <LinearLayout
@@ -67,21 +68,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/product_name"/>
+            android:text="@string/product_name"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/collection_due"/>
+            android:text="@string/collection_due"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/today_collection"/>
+            android:text="@string/today_collection"
+            android:textStyle="bold" />
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -106,14 +110,20 @@
                 android:layout_weight="1"
                 android:text="@string/bt_cancel"
                 android:id="@+id/btn_cancel"
-                style="@style/standard_button"/>
+                style="@style/standard_button"
+                android:background="@android:color/holo_blue_dark"
+                android:textColor="@color/calendar_bg"
+                android:textStyle="bold" />
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/save"
                 android:id="@+id/btn_save"
-                style="@style/standard_button"/>
+                style="@style/standard_button"
+                android:background="@color/accent_material_light"
+                android:textColor="@color/calendar_text_selected"
+                android:textStyle="bold" />
         </LinearLayout>
 
 

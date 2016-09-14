@@ -6,12 +6,22 @@ import io.realm.RealmObject;
  * Created by Praveen J U on 7/17/2016.
  */
 public class TableStatus  extends RealmObject{
-    private Long id;
+    private Integer id;
     private String code;
     private String value;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    private int type;
     private Long fkCenterId;
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -30,15 +40,8 @@ public class TableStatus  extends RealmObject{
     public TableStatus() {
     }
 
-    public TableStatus(Long id, String code, String value, Long fkCenterId) {
-        super();
-        this.id = id;
-        this.code = code;
-        this.value = value;
-        this.fkCenterId = fkCenterId;
-    }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -17,7 +17,7 @@ public interface CollectionSheetMvpView extends MvpView {
     void showProgressbar(boolean b);
 
     void showProductiveCollectionSheet(ArrayList<ProductiveCollectionData> productiveCollectionData);
-    void showCenterCollectionSheet(CollectionSheetData collectionSheetData);
+    void showCenterCollectionSheet(CollectionSheetData collectionSheetData, Long centerId);
     void showFetchingError(HttpException response);
 
 }

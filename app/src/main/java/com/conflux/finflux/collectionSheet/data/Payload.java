@@ -9,9 +9,9 @@ import android.os.Parcelable;
 public class Payload implements Parcelable {
     private String dateFormat;
     private String locale;
-    private Long officeId;
-    private Long staffId;
-    private String meetingDate;
+    private Object officeId;
+    private Object staffId;
+    private Object meetingDate;
     private String transactionDate;
     private long calendarId;
 
@@ -32,7 +32,7 @@ public class Payload implements Parcelable {
     }
 
     public Long getOfficeId() {
-        return officeId;
+        return (Long) officeId;
     }
 
     public void setOfficeId(Long officeId) {
@@ -40,7 +40,7 @@ public class Payload implements Parcelable {
     }
 
     public Long getStaffId() {
-        return staffId;
+        return (Long) staffId;
     }
 
     public void setStaffId(Long staffId) {
@@ -48,7 +48,7 @@ public class Payload implements Parcelable {
     }
 
     public String getMeetingDate() {
-        return meetingDate;
+        return (String) meetingDate;
     }
 
     public void setMeetingDate(String meetingDate) {
@@ -84,6 +84,7 @@ public class Payload implements Parcelable {
                 '}';
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -95,7 +96,9 @@ public class Payload implements Parcelable {
         dest.writeString(this.locale);
         dest.writeValue(this.officeId);
         dest.writeValue(this.staffId);
-        dest.writeString(this.meetingDate);
+        dest.writeString((String) this.meetingDate);
+        dest.writeString(this.transactionDate);
+        dest.writeLong(this.calendarId);
     }
 
     public Payload() {
@@ -107,15 +110,8 @@ public class Payload implements Parcelable {
         this.officeId = (Long) in.readValue(Long.class.getClassLoader());
         this.staffId = (Long) in.readValue(Long.class.getClassLoader());
         this.meetingDate = in.readString();
+        this.transactionDate = in.readString();
+        this.calendarId = in.readLong();
     }
 
-    public static final Creator<Payload> CREATOR = new Creator<Payload>() {
-        public Payload createFromParcel(Parcel source) {
-            return new Payload(source);
-        }
-
-        public Payload[] newArray(int size) {
-            return new Payload[size];
-        }
-    };
 }

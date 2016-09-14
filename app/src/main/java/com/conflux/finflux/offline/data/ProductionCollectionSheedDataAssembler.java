@@ -18,6 +18,7 @@ import io.realm.Realm;
  * Created by Praveen J U on 7/18/2016.
  */
 public class ProductionCollectionSheedDataAssembler {
+    private final String TAG = getClass().getSimpleName();
     List<ProductiveCollectionData> productiveCollectionDatas;
     ArrayList<ExtendedProductionCollectiondata> extendedProductionCollectiondatas;
     private final String meetingDate;
@@ -49,16 +50,24 @@ public class ProductionCollectionSheedDataAssembler {
                 CenterListHelper centerListHelper = new CenterListHelper();
                 centerListHelper.setMeetingFallCenter(meetingFallCenter);
                 centerListHelper.setDate(meetingDate);
-                if(!isCenterWithIdAlreadyExist(meetingFallCenter.getId())){
+                if(isCenterWithIdAlreadyExist(meetingFallCenter.getId())){
                     centerListHelper.setCanDownload(false);
+                    TableMeetingFallCenter tableMeetingFallCenter = getMeetingFallCenterData(meetingFallCenter.getId());
+                    if(!tableMeetingFallCenter.getTotalCollected().equals("0"))
+                    {
+                        meetingFallCenter.setTotalCollected(tableMeetingFallCenter.getTotalCollected());
+                    }
                     centerListHelper.setReason(context.getString(R.string.center_download_status_already_downloaded));
-                }else if(meetingFallCenter.getTotaldue() == 0 ){
+                }else if(meetingFallCenter.getTotaldue().equals(0.0)){
+                    Logger.d(TAG,"total due  equal 0");
                     centerListHelper.setCanDownload(false);
                     centerListHelper.setReason(context.getString(R.string.center_download_status_center_no_collection));
-                }else if(meetingFallCenter.getTotalCollected() != 0){
+                }else if(!meetingFallCenter.getTotalCollected().equals(0.0)){
+                    Logger.d(TAG,"total collected not equal 0");
                     centerListHelper.setCanDownload(false);
                     centerListHelper.setReason(context.getString(R.string.center_download_status_center_collection_completed));
                 }else {
+                    Logger.d(TAG,"total collected can download");
                     centerListHelper.setCanDownload(true);
                     centerListHelper.setReason(context.getString(R.string.collection_status_can_download));
                 }
@@ -76,6 +85,11 @@ public class ProductionCollectionSheedDataAssembler {
         }else {
             return false;
         }
+    }
+
+    private TableMeetingFallCenter getMeetingFallCenterData(final Long centerId){
+        TableMeetingFallCenter tableMeetingFallCenter = realm.where(TableMeetingFallCenter.class).equalTo("id",centerId).findFirst();
+        return tableMeetingFallCenter;
     }
 
 }

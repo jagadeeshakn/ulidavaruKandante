@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.conflux.finflux.collectionSheet.assembler.SaveCollectionSheetPayloadAssembler;
 import com.conflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.injection.module.ApplicationContext;
 import com.conflux.finflux.injection.module.ApplicationModule;

@@ -39,7 +39,9 @@ import com.conflux.finflux.util.Toaster;
 import java.security.cert.CertificateException;
 
 import javax.inject.Inject;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -241,8 +243,8 @@ public class LoginActivity extends FinBaseActivity implements LoginMvpView {
     public void onLoginError(Throwable throwable) {
         Logger.e(TAG, "Login failure " + throwable.getMessage() + " clasue class " + throwable.getCause());
         try {
-            ApplicationAnalytics.sendLoginStatus(false,username,throwable.getMessage());
-            if (throwable.getCause() instanceof SSLHandshakeException || throwable.getCause() instanceof CertificateException) {
+            ApplicationAnalytics.sendLoginStatus(false,username,throwable.getMessage().substring(0,99));
+            if (throwable.getCause() instanceof SSLHandshakeException || throwable.getCause() instanceof CertificateException || throwable instanceof SSLPeerUnverifiedException || throwable.getCause() instanceof HostnameVerifier) {
                 login(true);
             } else
                 Toaster.show(findViewById(android.R.id.content), throwable.getMessage());

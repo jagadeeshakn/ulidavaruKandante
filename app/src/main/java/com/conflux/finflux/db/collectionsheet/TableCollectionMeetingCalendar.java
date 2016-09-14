@@ -8,38 +8,47 @@ import io.realm.RealmObject;
  */
 public class TableCollectionMeetingCalendar extends RealmObject {
     private Long fkMeetingFallCenterId;
+    private Long id;
     private Long calendarInstanceId;
-    private long calendarId;
     private Long entityId;
     private TableStatus entityType;
     private String title;
     private String description;
     private String location;
-    private TableMeetingDate meetingDate;
-    private TableMeetingTime meetingTime;
+    private String startDate;
+    private Integer iLocalMillis;
+    private Integer iMinDaysInFirstWeek;
+
+    public Integer getiMinDaysInFirstWeek() {
+        return iMinDaysInFirstWeek;
+    }
+
+    public void setiMinDaysInFirstWeek(Integer iMinDaysInFirstWeek) {
+        this.iMinDaysInFirstWeek = iMinDaysInFirstWeek;
+    }
+
+    public Integer getiLocalMillis() {
+        return iLocalMillis;
+    }
+
+    public void setiLocalMillis(Integer iLocalMillis) {
+        this.iLocalMillis = iLocalMillis;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private boolean repeating;
     private String recurrence;
-    private RealmList<TableInteger> startDate;
 
     public TableCollectionMeetingCalendar() {
     }
 
-    public TableCollectionMeetingCalendar(Long fkMeetingFallCenterId, Long calendarInstanceId, long calendarId, Long entityId, TableStatus entityType, String title, String description, String location, TableMeetingDate meetingDate, TableMeetingTime meetingTime, boolean repeating, String recurrence, RealmList<TableInteger> startDate) {
-        super();
-        this.fkMeetingFallCenterId = fkMeetingFallCenterId;
-        this.calendarInstanceId = calendarInstanceId;
-        this.calendarId = calendarId;
-        this.entityId = entityId;
-        this.entityType = entityType;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.meetingDate = meetingDate;
-        this.meetingTime = meetingTime;
-        this.repeating = repeating;
-        this.recurrence = recurrence;
-        this.startDate = startDate;
-    }
 
     public void setFkMeetingFallCenterId(Long fkMeetingFallCenterId) {
         this.fkMeetingFallCenterId = fkMeetingFallCenterId;
@@ -47,10 +56,6 @@ public class TableCollectionMeetingCalendar extends RealmObject {
 
     public void setCalendarInstanceId(Long calendarInstanceId) {
         this.calendarInstanceId = calendarInstanceId;
-    }
-
-    public void setCalendarId(long calendarId) {
-        this.calendarId = calendarId;
     }
 
     public void setEntityId(Long entityId) {
@@ -73,14 +78,6 @@ public class TableCollectionMeetingCalendar extends RealmObject {
         this.location = location;
     }
 
-    public void setMeetingDate(TableMeetingDate meetingDate) {
-        this.meetingDate = meetingDate;
-    }
-
-    public void setMeetingTime(TableMeetingTime meetingTime) {
-        this.meetingTime = meetingTime;
-    }
-
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
     }
@@ -89,7 +86,7 @@ public class TableCollectionMeetingCalendar extends RealmObject {
         this.recurrence = recurrence;
     }
 
-    public void setStartDate(RealmList<TableInteger> startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -107,9 +104,6 @@ public class TableCollectionMeetingCalendar extends RealmObject {
         return calendarInstanceId;
     }
 
-    public long getCalendarId() {
-        return calendarId;
-    }
     public Long getEntityId() {
         return entityId;
     }
@@ -130,19 +124,6 @@ public class TableCollectionMeetingCalendar extends RealmObject {
     }
 
 
-
-    public TableMeetingDate getMeetingDate() {
-        return meetingDate;
-    }
-
-
-
-    public TableMeetingTime getMeetingTime() {
-        return meetingTime;
-    }
-
-
-
     public boolean isRepeating() {
         return repeating;
     }
@@ -155,7 +136,7 @@ public class TableCollectionMeetingCalendar extends RealmObject {
 
 
 
-    public RealmList<TableInteger> getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 

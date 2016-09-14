@@ -19,7 +19,7 @@ public class TableMeetingFallCenter extends RealmObject {
     private TableStatus status;
     private Boolean active;
     private int isSynced;
-    private RealmList<TableInteger> activationDate;
+    private String activationDate;
     private TableCollectionMeetingCalendar collectionMeetingCalendar;
     private Double totalCollected;
     private Double totalOverdue;
@@ -72,7 +72,7 @@ public class TableMeetingFallCenter extends RealmObject {
         return isSynced;
     }
 
-    public RealmList<TableInteger> getActivationDate() {
+    public String getActivationDate() {
         return activationDate;
     }
 
@@ -132,7 +132,7 @@ public class TableMeetingFallCenter extends RealmObject {
         this.isSynced = isSynced;
     }
 
-    public void setActivationDate(RealmList<TableInteger> activationDate) {
+    public void setActivationDate(String activationDate) {
         this.activationDate = activationDate;
     }
 
@@ -156,24 +156,5 @@ public class TableMeetingFallCenter extends RealmObject {
         return totaldue;
     }
 
-    public TableMeetingFallCenter(long fkProductiveCollectionSheetDataId, Long id, String accountNo, String name, Integer officeId, Long staffId, String staffName, String hierarchy, TableStatus status, Boolean active, int isSynced, RealmList<TableInteger> activationDate, TableCollectionMeetingCalendar collectionMeetingCalendar, Double totalCollected, Double totalOverdue, Double totaldue) {
-        super();
-        this.fkProductiveCollectionSheetDataId = fkProductiveCollectionSheetDataId;
-        this.id = id;
-        this.accountNo = accountNo;
-        this.name = name;
-        this.officeId = officeId;
 
-        this.staffId = staffId;
-        this.staffName = staffName;
-        this.hierarchy = hierarchy;
-        this.status = status;
-        this.active = active;
-        this.isSynced = isSynced;
-        this.activationDate = activationDate;
-        this.collectionMeetingCalendar = collectionMeetingCalendar;
-        this.totalCollected = totalCollected;
-        this.totalOverdue = totalOverdue;
-        this.totaldue = totaldue;
-    }
 }

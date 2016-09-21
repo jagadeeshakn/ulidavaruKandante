@@ -8,6 +8,7 @@ import com.conflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.infrastructure.api.manager.SaveResponse;
 import com.conflux.finflux.util.Logger;
 import com.conflux.finflux.util.PrefManager;
+import com.conflux.finflux.util.exception.ErrorResponse;
 
 import javax.inject.Inject;
 
@@ -49,16 +50,18 @@ public class SaveCollectionSheetPresenter extends BasePresenter<CollectionSheetG
                     @Override
                     public void onError(Throwable e) {
                         mCollectionMvpView.showProgressbar(false);
+                        Logger.d("exception","throwable exception data "+e.toString());
                         if (e instanceof HttpException) {
                             HttpException response = (HttpException) e;
-                            getMvpView().showFetchingError(response);
+                            mCollectionMvpView.showFetchingError(response);
                         }
                     }
 
                     @Override
                     public void onNext(SaveResponse saveResponse) {
                         mCollectionMvpView.showProgressbar(false);
-                        Logger.d(getClass().getSimpleName(),"the response is "+saveResponse);
+                        Logger.d(getClass().getSimpleName(), "the response is " + saveResponse);
+                        mCollectionMvpView.showCollectionSheetSaved(saveResponse);
                     }
                 });
     }

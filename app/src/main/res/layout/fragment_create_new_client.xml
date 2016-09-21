@@ -1,0 +1,201 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/global_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.conflux.finflux.createClient.fragment.CreateNewClientFragment">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/sl_scroll_layout"
+        android:layout_above="@+id/ll_bottom_layout">
+
+        <RelativeLayout
+            android:id="@+id/rl_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingBottom="30dp">
+
+            <RelativeLayout
+                android:id="@+id/ll_client_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+
+                <ImageView
+                    android:id="@+id/iv_new_clientImage"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_dp_placeholder"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/bt_autofill"
+                    style="@style/standard_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="2dp"
+                    android:gravity="center"
+                    android:text="@string/auto_fill" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/ll_client_image"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_first_name"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/fname"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_middle_name"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/mname"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_last_name"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/lname"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                        <EditText
+                            android:id="@+id/et_client_dob"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:hint="@string/dob"
+                            android:paddingBottom="16dp"
+                            android:singleLine="true" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/edit_dob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="3dp"
+                        android:background="@color/finflux_theme_color"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_calendar" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingTop="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_gender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/gender"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_gender"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_client_mobile_number"
+                        style="@style/EditText.BaseWidth"
+                        android:gravity="start"
+                        android:hint="@string/mobileNumb"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_bottom_layout"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/standard_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/bt_cancel" />
+
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/standard_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/bt_next" />
+
+    </LinearLayout>
+</RelativeLayout>

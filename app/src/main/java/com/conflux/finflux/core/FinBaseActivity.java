@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.conflux.finflux.R;
 import com.conflux.finflux.collectionSheet.activity.CollectionSheetActivity;
+import com.conflux.finflux.createClient.activity.CreateNewClientActivity;
 import com.conflux.finflux.infrastructure.FinfluxApplication;
 import com.conflux.finflux.infrastructure.analytics.data.FabricIoConstants;
 import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytics;
@@ -148,6 +149,11 @@ public class FinBaseActivity extends AppCompatActivity implements BaseActivityCa
             case R.id.item_collection:
                 intent.setClass(getApplicationContext(), CollectionSheetActivity.class);
                 startNavigationClickActivity(intent);
+                break;
+            case R.id.item_clients:
+                intent.setClass(getApplicationContext(), CreateNewClientActivity.class);
+                startNavigationClickActivity(intent);
+                break;
         }
         mDrawerLayout.closeDrawer(Gravity.LEFT);
         switch (item.getItemId()) {

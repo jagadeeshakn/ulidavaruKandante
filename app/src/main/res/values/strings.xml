@@ -18,6 +18,9 @@
     <string name="title_activity_application_activation">ApplicationActivation</string>
     <string name="title_sliding_activity">Finflux</string>
 
+    <string name="title_collection_sheet_activity">Collection Sheet Activity</string>
+    <string name="title_create_client_activity">Create Client Activity</string>
+
     //login strings
     <string name="url_error_empty">Please provide valid url/ip address.</string>
     <string name="tenant_error_empty">Please provide valid tenant identifier.</string>
@@ -110,6 +113,8 @@
     <string name="error_message">Error Message</string>
     <string name="bt_ok">Okay</string>
     <string name="bt_cancel">Cancel</string>
+    <string name="bt_save">Save</string>
+    <string name="bt_next">Next</string>
     <string name="alert">Alert</string>
     <string name="please_wait">Please wait....</string>
 
@@ -122,6 +127,56 @@
     <string name="center_name">Center Name</string>
     <string name="small_text">Small Text</string>
     <string name="collection.sheet.save.successfull">Collection sheet saved successfully.</string>
+
+    <!-- create client string -->
+    <string name="create_client">Create Client</string>
+    <string name="create_new_client">Create New Client</string>
+    <string name="create_address">Create Address</string>
+    <string name="auto_fill">Auto Fill</string>
+    <string name="fname">First Name</string>
+    <string name="mname">Middle Name</string>
+    <string name="lname">Last Name</string>
+    <string name="dob">Date Of Birth</string>
+    <string name="mobileNumb">Mobile Number</string>
+    <string name="select_gender">Select Gender</string>
+    <string name="select_country">Select Country</string>
+    <string name="select_state">Select State</string>
+    <string name="select_district">Select District</string>
+    <string name="select_taluka">Select Taluka</string>
+    <string name="select_addressType">Select Address</string>
+    <string name="gender">Gender</string>
+    <string name="address_type">AddressType</string>
+    <string name="house">House No</string>
+    <string name="street">Street</string>
+    <string name="taluk">Taluk</string>
+    <string name="village">Village</string>
+    <string name="district">District</string>
+    <string name="state">State</string>
+    <string name="country">Country</string>
+    <string name="pincode">Pincode</string>
+
+
+    //aadhar services strings
+    <string name="Aadhar_service">Create Client Using Aadhar Service </string>
+    <string name="choose_formats">choose_formats</string>
+    <string name="select_camera">select_camera</string>
+    <string name="flash_on">flash_on</string>
+    <string name="flash_off" >flash_off</string>
+    <string name="auto_focus_on">focus_on</string>
+    <string name="auto_focus_off">focus_off</string>
+    <string name="formats">formats</string>
+
+    //client required fields
+    <string name="first_name_required">First name is required</string>
+    <string name="last_name_required">Last name is required</string>
+
+
+    <string-array name="scan_choice">
+        <item>QRCODE SCAN</item>
+        <item>OTP</item>
+        <item>FINGER PRINT</item>
+    </string-array>
+
 
 </resources>
 

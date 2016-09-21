@@ -2,7 +2,6 @@ package com.conflux.finflux.login.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +20,6 @@ import com.conflux.finflux.infrastructure.analytics.services.ApplicationAnalytic
 import com.conflux.finflux.infrastructure.api.manager.BaseApiManager;
 import com.conflux.finflux.infrastructure.api.manager.Data;
 import com.conflux.finflux.injection.component.ActivityComponent;
-import com.conflux.finflux.injection.component.DaggerActivityComponent;
-import com.conflux.finflux.injection.module.ActivityModule;
 import com.conflux.finflux.login.data.LoginConstants;
 import com.conflux.finflux.login.data.Role;
 import com.conflux.finflux.login.data.User;

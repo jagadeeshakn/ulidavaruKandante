@@ -57,10 +57,7 @@
             android:label="@string/title_sliding_activity"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".logout.activity.LogoutActivity" />
-        <activity
-            android:name=".collectionSheet.activity.CollectionSheetActivity"
-            android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme"></activity>
+
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -102,7 +99,27 @@
         </receiver>
 
         <activity
-            android:name=".offline.activity.OfflineManagement"
+            android:name="com.conflux.finflux.collectionSheet.activity.CollectionSheetActivity"
+            android:label="@string/title_collection_sheet_activity"
+            android:parentActivityName="com.conflux.finflux.dashboard.activity.DashBoardActivity"
+            android:theme="@style/FullscreenTheme"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.conflux.finflux.dashboard.activity.DashBoardActivity" />
+        </activity>
+        <activity
+            android:name="com.conflux.finflux.createClient.activity.CreateNewClientActivity"
+            android:label="@string/title_create_client_activity"
+            android:parentActivityName="com.conflux.finflux.dashboard.activity.DashBoardActivity"
+            android:theme="@style/FullscreenTheme"
+            android:windowSoftInputMode="stateVisible|adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.conflux.finflux.dashboard.activity.DashBoardActivity" />
+        </activity>
+        <activity
+            android:name="com.conflux.finflux.offline.activity.OfflineManagement"
             android:label="@string/title_activity_offline_management"
             android:parentActivityName=".dashboard.activity.DashBoardActivity"
             android:theme="@style/FullscreenTheme">

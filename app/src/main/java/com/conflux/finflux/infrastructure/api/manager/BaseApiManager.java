@@ -1,6 +1,7 @@
 package com.conflux.finflux.infrastructure.api.manager;
 
 import com.conflux.finflux.collectionSheet.services.CollectionSheetServices;
+import com.conflux.finflux.createClient.services.CreateClientServices;
 import com.conflux.finflux.infrastructure.JsonDateSerializer;
 import com.conflux.finflux.infrastructure.api.BaseUrl;
 import com.conflux.finflux.login.services.AuthService;
@@ -25,6 +26,7 @@ public class BaseApiManager {
     private static AuthService authApi;
     private static CollectionSheetServices productiveApi;
     private static CollectionSheetServices collectionApi;
+    private static CreateClientServices clientsApi;
     private String BASE_URL;
     private boolean shouldByPassSSLCerti = false;
 
@@ -48,9 +50,10 @@ public class BaseApiManager {
         createAuthApi();
         productiveApi = createApi(CollectionSheetServices.class);
         collectionApi = createApi(CollectionSheetServices.class);
+        clientsApi = createApi(CreateClientServices.class);
     }
 
-    //retrofit buider
+    //retrofit builder
     private static <T> T createApi(Class<T> clazz) {
         return mRetrofit.create(clazz);
     }
@@ -93,5 +96,8 @@ public class BaseApiManager {
         return collectionApi;
     }
 
+    public  CreateClientServices getClientsApi(){
+        return clientsApi;
+    }
 
 }

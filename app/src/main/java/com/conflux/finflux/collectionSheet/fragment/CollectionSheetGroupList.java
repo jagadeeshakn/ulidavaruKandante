@@ -48,6 +48,10 @@ import com.conflux.finflux.util.event.EventBus;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,6 +65,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 
 /**
@@ -162,7 +167,7 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
             collectionSheetDataAdapter.add(i,dataAdapter.get(i));
         }
         groupCollectionListAdapter.notifyDataSetChanged();
-        Logger.d(TAG,"the collection sheet data adapeter is "+new Gson().toJson(collectionSheetDataAdapter));
+        Logger.d(TAG, "the collection sheet data adapeter is " + new Gson().toJson(collectionSheetDataAdapter));
 
         displayTotalDueAndColected();
     }
@@ -239,7 +244,7 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
         if(b){
             showFinfluxProgressDialog("Please Wait");
         }else {
-            hideFinfluxProgressBar();
+            hideFinfluxProgressDialog();
         }
     }
 
@@ -254,7 +259,37 @@ public class CollectionSheetGroupList extends FinBaseFragment implements Collect
 
     @Override
     public void showFetchingError(HttpException response) {
-        Logger.d(TAG,"Failure");
+        Response response1 = response.response();
+        Logger.d(TAG, "Failure"+ getStringFromInputStream(response1.errorBody().byteStream()));
+    }
+
+    public static String getStringFromInputStream(InputStream is) {
+
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return sb.toString();
+
     }
 
     @Override

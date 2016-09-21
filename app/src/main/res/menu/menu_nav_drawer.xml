@@ -3,47 +3,47 @@
 
 
     <!-- dummy ids are given to ech group to make dividers between each group -->
-    <group android:checkableBehavior="none"
-        android:id="@+id/group1" >
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="none">
 
-
+        <item
+            android:id="@+id/item_clients"
+            android:checked="false"
+            android:icon="@drawable/ic_clients"
+            android:title="@string/create_new_client" />
 
         <item
             android:id="@+id/item_collection"
             android:checked="false"
             android:icon="@drawable/ic_collection_sheet"
-            android:title="@string/collections"
-            />
-
+            android:title="@string/collections" />
                 
     </group>
-     
-       
-     
-       
-    <group android:checkableBehavior="none"
-        android:id="@+id/group3">
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="none">
          
         <item
             android:id="@+id/item_offline"
             android:checked="false"
             android:icon="@drawable/ic_offline"
-            android:title="@string/offline"
-            />
-         
+            android:title="@string/offline" /> 
     </group>
-    <group android:checkableBehavior="none"
-        android:id="@+id/group5">
-        <item android:id="@+id/item_settings"
+    <group
+        android:id="@+id/group5"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/item_settings"
             android:checked="false"
             android:icon="@drawable/ic_setting_dark"
-            android:title="@string/title_activity_settings"/>
+            android:title="@string/title_activity_settings" />
         <item
             android:id="@+id/item_logout"
             android:checked="false"
             android:icon="@drawable/ic_offline"
-            android:title="@string/logout"
-            />
+            android:title="@string/logout" />
     </group>
 
 </menu>

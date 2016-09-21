@@ -1,0 +1,257 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:windowSoftInputMode="stateVisible"
+    tools:context="com.conflux.finflux.createClient.fragment.CreateNewAddressFragment">
+
+    <!--<RelativeLayout
+        android:id="@+id/rl_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/bt_cancel"
+                style="@style/standard_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/bt_cancel" />
+
+            <Button
+                android:id="@+id/bt_save"
+                style="@style/standard_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/bt_save" />
+
+        </LinearLayout>
+    </RelativeLayout>-->
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="beforeDescendants">
+
+            <LinearLayout
+                android:id="@+id/ll_address_fields"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_addresstype"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/address_type"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_addresstype"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_house"
+                        style="@style/EditText.BaseWidth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/house"
+                        android:paddingTop="8dp"
+                        android:singleLine="true"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_street"
+                        style="@style/EditText.BaseWidth"
+                        android:hint="@string/street"
+                        android:inputType="textCapSentences"
+                        android:paddingTop="8dp"
+                        android:singleLine="true"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_village"
+                        style="@style/EditText.BaseWidth"
+                        android:hint="@string/village"
+                        android:inputType="textCapSentences"
+                        android:paddingTop="8dp"
+                        android:singleLine="true"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_country"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/country"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_country"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_state"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/state"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_state"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_district"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/district"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_district"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tv_taluka"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:paddingBottom="8dp"
+                        android:text="@string/taluk"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_taluka"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.7"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout style="@style/TextInput.Base">
+
+                    <EditText
+                        android:id="@+id/et_pincode"
+                        style="@style/EditText.BaseWidth"
+                        android:hint="@string/pincode"
+                        android:paddingTop="8dp"
+                        android:singleLine="true"/>
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_bottom_layout"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/standard_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/bt_cancel" />
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/standard_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/bt_save" />
+
+    </LinearLayout>
+</RelativeLayout>

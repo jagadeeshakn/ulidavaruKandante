@@ -63,7 +63,7 @@ public class CodeValue implements Parcelable {
     }
 
     protected CodeValue(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Long.class.getClassLoader());
         this.code = in.readString();
         this.value = in.readString();
     }

@@ -23,6 +23,7 @@ public class PrefManager {
     private static final String CAN_USE_DEFAULT_CERTIFICATE = "can_use_default_certificate";
     private static final String IS_AUTENTICATED_USER = "authenticated_user";
     private static final String PAIRED_DEVICE = "paired_device";
+    private static final String USER_STATUS = "user_status";
 
     public static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(FinfluxApplication.getInstance().getApplicationContext());
@@ -96,6 +97,9 @@ public class PrefManager {
         return getPreferences().getStringSet(preferencesKey, null);
     }
 
+    public static int getUserStatus() {
+        return getInt(USER_STATUS, 0);
+    }
     // Concrete methods
 
     /**
